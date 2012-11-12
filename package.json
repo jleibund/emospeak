@@ -1,0 +1,12 @@
+{
+    "name": "emospeak"
+    , "version": "0.0.1"
+    , "private": true
+    , "dependencies": {
+        "kn": "latest"
+        , "WNdb" : "latest"
+        , "underscore" : "latest"
+        , "mongoose": "latest"
+
+    }
+}
