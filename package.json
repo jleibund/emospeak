@@ -5,6 +5,9 @@
     , "dependencies": {
         "kn": "latest"
         , "WNdb" : "latest"
+        , "wordpos" : "latest"
+        , "commander" : "latest"
+        , "command" : "latest"
         , "underscore" : "latest"
         , "mongoose": "latest"
 
