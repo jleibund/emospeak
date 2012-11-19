@@ -4,6 +4,8 @@
     , "private": true
     , "dependencies": {
         "kn": "latest"
+        , "appjs" : "0.0.20"
+        , "amdefine" : "latest"
         , "WNdb" : "latest"
         , "wordpos" : "latest"
         , "commander" : "latest"
