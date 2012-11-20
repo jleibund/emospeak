@@ -6,6 +6,7 @@
         "kn": "latest"
         , "appjs" : "0.0.20"
         , "amdefine" : "latest"
+        , "requirejs" : "latest"
         , "WNdb" : "latest"
         , "wordpos" : "latest"
         , "commander" : "latest"
