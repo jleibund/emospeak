@@ -28,6 +28,7 @@ requirejs.config({
         jquery: 'libs/jquery/jquery.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
+        socket: 'socket.io',
         three: 'libs/three/three.min',
         stats: 'libs/three/stats.min',
         detector: 'libs/three/Detector',
@@ -45,6 +46,9 @@ requirejs.config({
         'backbone.localStorage': {
             deps: ['backbone'],
             exports: 'Backbone'
+        },
+        socket: {
+            exports: 'io'
         }
     }
 });
@@ -52,8 +56,9 @@ requirejs.config({
 requirejs([
     'jquery',
     'backbone',
+    'socket',
     'views/CubeView'
-], function($, Backbone, CubeView) {
+], function($, Backbone, io, CubeView) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -67,13 +72,42 @@ requirejs([
 //                    $("#container").html(view.render().el).show();
 //                }
 //            });
-            var cubeView = new CubeView();
+
+            // setup an event source
+//            var source = this.source = new EventSource('/stream');
+//
+//
+//            source.addEventListener('open', function(e){console.log('connection open')},false);
+//            source.addEventListener('error', function(e){if (e.readyState == EventSource.CLOSED) console.log('connection closed')},false);
+//            source.addEventListener('message',function(e){
+//                console.log(e);
+//            }, false);
+
+//            var jsonSocket = new WebSocket('ws://127.0.0.1:7379/.json');
+//            console.log('jsonsocket',jsonSocket);
+//            jsonSocket.onmessage = function(e){
+//                console.log('received', e);
+//            }
+
+//            var socket = io.connect('http://localhost');
+//
+//            socket.on('connect', function () {
+//                socket.emit('set nickname', prompt('What is your nickname?'));
+//                socket.on('ready', function () {
+//                    console.log('Connected !');
+//                    socket.emit('msg', prompt('What is your message?'));
+//                });
+//            });
+
+            var cubeView = this.cubeView = new CubeView();
             console.log('cubeview',cubeView);
             cubeView.init();
 //            cubeView.animate();
             $("#container").html(cubeView.render().el).show();
         }
     });
+
+
 
     var router = new Router();
     router.main();

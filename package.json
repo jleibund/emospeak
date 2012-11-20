@@ -13,6 +13,8 @@
         , "command" : "latest"
         , "underscore" : "latest"
         , "mongoose": "latest"
+        , "redis" : "latest"
+        , "ws" : "latest"
 
     }
 }
