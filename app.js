@@ -90,13 +90,11 @@ window.on('ready', function(){
   window.module = module;
 
   function F12(e){ return e.keyIdentifier === 'F12' }
-  function s(e){ return e.keyCode === 13 }
   function Command_Option_J(e){ return e.keyCode === 74 && e.metaKey && e.altKey }
 
   window.addEventListener('keydown', function(e){
-    if (s(e) || Command_Option_J(e)) {
+    if (Command_Option_J(e)) {
       window.frame.openDevTools();
-//        say.say('Hello');
     }
   });
 });
