@@ -1,34 +1,9 @@
-//var requirejs = require('requirejs');
-//
-//requirejs.config({
-//    //Pass the top-level main.js/index.js require
-//    //function to requirejs so that node modules
-//    //are loaded relative to the top-level JS file.
-//    nodeRequire: require,
-//    paths: {
-//        jquery: 'libs/jquery/jquery.min',
-//        underscore: 'libs/underscore/underscore.min',
-//        backbone: 'libs/backbone/backbone.min',
-//        templates: '../templates'
-//    }
-//});
-//
-//requirejs([
-//    // Load our app module and pass it to our definition function
-//    './app'
-//], function(App){
-//    // The "app" dependency is passed in as "App"
-//    // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
-//    App.initialize();
-//});
-
 
 requirejs.config({
     paths: {
         jquery: 'libs/jquery/jquery.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
-        socket: 'socket.io',
         three: 'libs/three/three.min',
         stats: 'libs/three/stats.min',
         detector: 'libs/three/Detector',
@@ -37,7 +12,7 @@ requirejs.config({
     },
     shim: {
         underscore: {
-            exports: "_"
+            exports: '_'
         },
         backbone: {
             deps: ['underscore', 'jquery'],
@@ -47,8 +22,14 @@ requirejs.config({
             deps: ['backbone'],
             exports: 'Backbone'
         },
-        socket: {
-            exports: 'io'
+        stats: {
+            exports:'Stats'
+        },
+        detector:{
+            exports:'Detector'
+        },
+        three:{
+            exports:'THREE'
         }
     }
 });
@@ -56,48 +37,28 @@ requirejs.config({
 requirejs([
     'jquery',
     'backbone',
-    'socket',
     'views/CubeView'
-], function($, Backbone, io, CubeView) {
+], function($, Backbone, CubeView) {
+
+    var fs   = require('fs'),
+        path = require('path'),
+        cwd  = process.cwd();
+
+    fs.readdirSync(cwd).forEach(function(child){
+        console.log('child', path.resolve(cwd, child));
+    });
+
+    addEventListener('app-ready', function(e){
+
+//        window.dispatchEvent(new Event('app-done'));
+    });
 
     var Router = Backbone.Router.extend({
         routes: {
             "*actions": "main"
         },
         main: function(){
-//            var tasks = new Todo.Collection();
-//            var view = new MasterView({collection: tasks});
-//            tasks.fetch({
-//                success: function(tasks){
-//                    $("#container").html(view.render().el).show();
-//                }
-//            });
 
-            // setup an event source
-//            var source = this.source = new EventSource('/stream');
-//
-//
-//            source.addEventListener('open', function(e){console.log('connection open')},false);
-//            source.addEventListener('error', function(e){if (e.readyState == EventSource.CLOSED) console.log('connection closed')},false);
-//            source.addEventListener('message',function(e){
-//                console.log(e);
-//            }, false);
-
-//            var jsonSocket = new WebSocket('ws://127.0.0.1:7379/.json');
-//            console.log('jsonsocket',jsonSocket);
-//            jsonSocket.onmessage = function(e){
-//                console.log('received', e);
-//            }
-
-//            var socket = io.connect('http://localhost');
-//
-//            socket.on('connect', function () {
-//                socket.emit('set nickname', prompt('What is your nickname?'));
-//                socket.on('ready', function () {
-//                    console.log('Connected !');
-//                    socket.emit('msg', prompt('What is your message?'));
-//                });
-//            });
 
             var cubeView = this.cubeView = new CubeView();
             console.log('cubeview',cubeView);
