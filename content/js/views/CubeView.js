@@ -108,7 +108,8 @@ define([
 
             this.stats = new Stats();
             this.stats.domElement.style.position = 'absolute';
-            this.stats.domElement.style.top = '0px';
+            this.stats.domElement.style.top = '10px';
+            this.stats.domElement.style.left = '40px';
             document.append( this.stats.domElement );
 
 //            window.addEventListener( 'mousedown', this.onDocumentMouseDown.bind(this), false );
@@ -190,7 +191,6 @@ define([
 
             var document = this.$el;
             var width = document.width(), height = document.height();
-
 
             this.windowHalfX = width / 2;
             this.windowHalfY = height / 2;

@@ -72,11 +72,10 @@ var statusIcon = app.createStatusIcon({
 });
 
 var window = app.createWindow({
-  width  : 400,
-  height : 200,
+  width  : 780,
+  height : 390,
   icons  : __dirname + '/content/icons'
 });
-
 
 window.on('create', function(){
   console.log("Window Created");

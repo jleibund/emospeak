@@ -37,8 +37,10 @@ requirejs.config({
 requirejs([
     'jquery',
     'backbone',
-    'views/CubeView'
-], function($, Backbone, CubeView) {
+    'views/CubeView',
+    'views/FooterView',
+    'views/SelectorView'
+], function($, Backbone, CubeView, FooterView, SelectorView) {
 
 
     function up(e) {return e.keyCode === 38}
@@ -66,22 +68,6 @@ requirejs([
 
         //    var conn = mongoose.createConnection("mongodb://localhost/emospeak");
             var controller = this.controller = new Controller({profile:'test', voice:'Ralph', rate:240});
-            controller.init(function(){
-
-//                controller.submitLine('chris had');
-//                controller.submitLine('chris wants');
-
-                controller.nextWord('chris');
-
-            });
-//
-//            controller.submitLine();
-
-
-            var cubeView = this.cubeView = new CubeView();
-            cubeView.init();
-
-            var rotateAmt = 25;
 
             controller.addListener(Controller.LIFT,function(e){cubeView.moveUp()});
             controller.addListener(Controller.DROP,function(e){cubeView.moveDown()});
@@ -97,7 +83,24 @@ requirejs([
             controller.addListener(Controller.ROTATE_RIGHT,function(e){cubeView.rotateRight()});
             controller.addListener(Controller.NEUTRAL,function(e){cubeView.center()});
 
+
+            var cubeView = this.cubeView = new CubeView();
+            cubeView.init();
+
+            var footerView = this.footerView = new FooterView();
+            footerView.init(controller);
+
+            var selectorView = this.footerView = new SelectorView();
+            selectorView.init(controller);
+
+            controller.addListener(Controller.NEXTWORD,function(e,options){selectorView.wordOptions(e)});
+
             $("#container").html(cubeView.render().el).show();
+
+            controller.init(function(){
+                console.log('inited!')
+                controller.nextWord('');
+            });
 
             // test harness
             window.addEventListener('keydown', function(e){
