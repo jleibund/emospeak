@@ -1,8 +1,4 @@
-var app = module.exports = require('appjs'), mongoose = require('mongoose'),
-    Controller = require('./lib/controller').Controller;
-
-var conn = mongoose.createConnection("mongodb://localhost/emospeak");
-var controller = new Controller({connection:conn, profile:'test', voice:'Ralph', rate:240});
+var app = module.exports = require('appjs');
 
 app.serveFilesFrom(__dirname + '/content');
 
@@ -95,7 +91,6 @@ window.on('ready', function(){
   window.module = module;
   window.require = require;
 
-  function F12(e){ return e.keyIdentifier === 'F12' }
   function Command_Option_J(e){ return e.keyCode === 74 && e.metaKey && e.altKey }
 
     require('./lib/console');
@@ -103,10 +98,6 @@ window.on('ready', function(){
     window.addEventListener('keydown', function(e){
     if (Command_Option_J(e)) {
       window.frame.openDevTools();
-    } else if (e.keyCode == 48){
-//        controller.fireEvent({data:'foobar'});
-        sendMessageToServer('hello');
-//        publisherClient.publish('updates','foobar');
     }
   });
 });

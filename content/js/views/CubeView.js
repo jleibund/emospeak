@@ -6,21 +6,9 @@ define([
     'stats'
 ], function($, _, Backbone, THREE, Stats){
 
-    function up(e) {return e.keyCode === 38}
-    function down(e) {return e.keyCode === 40}
-    function left(e) {return e.keyCode ===37}
-    function right(e) {return e.keyCode ===39}
-    function push(e) {return e.metaKey}
-    function pull(e) {return e.altKey}
-    function q(e) {return e.keyCode ===81}
-    function w(e) {return e.keyCode ===87}
-    function a(e) {return e.keyCode ===65}
-    function s(e) {return e.keyCode ===83}
-    function z(e) {return e.keyCode ===90}
-    function x(e) {return e.keyCode ===88}
     function de2ra(degree)   { return degree*(Math.PI/180); }
 
-    var SIZE=150, UPDOWN_AMT=205, LEFTRIGHT_AMT= 300, PUSHPULL_AMT = 300,
+    var SIZE=150, UPDOWN_AMT=205, LEFTRIGHT_AMT= 300, PUSHPULL_AMT = 300, ROTATE_AMT = 25,
         CAMERA_Z = 600, NEUTRAL_X= 0, NEUTRAL_Y = 325, NEUTRAL_Z=0;
 
     var CubeView = Backbone.View.extend({
@@ -33,12 +21,10 @@ define([
         NEUTRAL_X:NEUTRAL_X,
         NEUTRAL_Y:NEUTRAL_Y,
         NEUTRAL_Z:NEUTRAL_Z,
-        UP_Y:NEUTRAL_Y+UPDOWN_AMT,
-        DOWN_Y:NEUTRAL_Y-UPDOWN_AMT,
-        LEFT_X:NEUTRAL_X-LEFTRIGHT_AMT,
-        RIGHT_X:NEUTRAL_X+LEFTRIGHT_AMT,
-        PUSH_Z:CAMERA_Z+PUSHPULL_AMT,
-        PULL_Z:CAMERA_Z-PUSHPULL_AMT,
+        UPDOWN_AMT:UPDOWN_AMT,
+        LEFTRIGHT_AMT:LEFTRIGHT_AMT,
+        PUSHPULL_AMT:PUSHPULL_AMT,
+        ROTATE_AMT:ROTATE_AMT,
         render: function(){
             requestAnimationFrame( this.render.bind(this) );
 
@@ -54,6 +40,15 @@ define([
             return this;
         },
         init: function() {
+
+            this.UP_Y=this.NEUTRAL_Y+this.UPDOWN_AMT;
+            this.DOWN_Y=this.NEUTRAL_Y-this.UPDOWN_AMT;
+            this.LEFT_X=this.NEUTRAL_X-this.LEFTRIGHT_AMT;
+            this.RIGHT_X=this.NEUTRAL_X+this.LEFTRIGHT_AMT;
+            this.PUSH_Z=this.CAMERA_Z+this.PUSHPULL_AMT;
+            this.PULL_Z=this.CAMERA_Z-this.PUSHPULL_AMT;
+
+            console.log('updown: '+this.UP_Y);
 
             var document = this.$el;
 
@@ -116,44 +111,10 @@ define([
             this.stats.domElement.style.top = '0px';
             document.append( this.stats.domElement );
 
-            window.addEventListener( 'mousedown', this.onDocumentMouseDown.bind(this), false );
-            window.addEventListener( 'touchstart', this.onDocumentTouchStart.bind(this), false );
-            window.addEventListener( 'touchmove', this.onDocumentTouchMove.bind(this), false );
+//            window.addEventListener( 'mousedown', this.onDocumentMouseDown.bind(this), false );
+//            window.addEventListener( 'touchstart', this.onDocumentTouchStart.bind(this), false );
+//            window.addEventListener( 'touchmove', this.onDocumentTouchMove.bind(this), false );
             window.addEventListener( 'resize', this.onWindowResize.bind(this), false );
-
-            var self = this;
-
-            window.addEventListener('keydown', function(e){
-                console.log('pressed: ', e.keyCode);
-                if (up(e)) {
-                    self.move('y',self.UP_Y);
-                } else if (down(e)){
-                    self.move('y',self.DOWN_Y);
-                } else if (left(e)){
-                    self.move('x',self.LEFT_X);
-                } else if (right(e)){
-                    self.move('x',self.RIGHT_X);
-                } else if (push(e)){
-                    self.move('z',self.PUSH_Z);
-                } else if (pull(e)){
-                    self.move('z',self.PULL_Z);
-                } else if (q(e)){
-                    self.rotate('x',25);
-                } else if (w(e)){
-                    self.rotate('x',-25);
-                } else if (a(e)){
-                    self.rotate('y',25);
-                } else if (s(e)){
-                    self.rotate('y',-25);
-                } else if (z(e)){
-                    self.rotate('z',25);
-                } else if (x(e)){
-                    self.rotate('z',-25);
-                }
-            });
-            window.addEventListener('keyup', function(e){
-                self.center();
-            });
 
             this.center();
         },
@@ -171,6 +132,47 @@ define([
             this.cube.rotation[dim] += de2ra(deg);
             if ('y' == dim) this.plane.rotation[dim] = this.cube.rotation[dim]
         },
+        moveUp:function(){
+            this.move('y',this.UP_Y)
+        },
+        moveDown:function(){
+            this.move('y',this.DOWN_Y)
+        },
+        moveLeft:function(){
+            this.move('x',this.LEFT_X)
+        },
+        moveRight:function(){
+            this.move('x',this.RIGHT_X)
+        },
+        movePush:function(){
+            this.move('z',this.PUSH_Z)
+        },
+        movePull:function(){
+            this.move('z',this.PULL_Z)
+        },
+        rotateLeft:function(){
+            this.rotate('y',this.ROTATE_AMT);
+        },
+        rotateRight:function(){
+            this.rotate('y',-this.ROTATE_AMT);
+
+        },
+        rotateFwd:function(){
+            this.rotate('x',this.ROTATE_AMT);
+
+        },
+        rotateBck:function(){
+            this.rotate('x',-this.ROTATE_AMT);
+
+        },
+        rotateCW:function(){
+            this.rotate('z',this.ROTATE_AMT);
+
+        },
+        rotateCCW:function(){
+            this.rotate('z',-this.ROTATE_AMT);
+        },
+
         center:function(){
             var cubePos = this.cube.position, planePos = this.plane.position, cubeRot = this.cube.rotation,
                 planeRot = this.plane.rotation;
@@ -199,72 +201,73 @@ define([
             console.log('resize',width,' ', height);
 
             this.renderer.setSize( width, height );
-        },
-        onDocumentMouseDown: function( event ) {
-
-            event.preventDefault();
-
-            window.addEventListener( 'mousemove', this.onDocumentMouseMove.bind(this), false );
-            window.addEventListener( 'mouseup', this.onDocumentMouseUp.bind(this), false );
-            window.addEventListener( 'mouseout', this.onDocumentMouseOut.bind(this), false );
-
-            this.mouseXOnMouseDown = event.clientX - this.windowHalfX;
-            this.targetRotationOnMouseDown = this.targetRotation;
-
-            console.log('mouseDown',this.mouseXOnMouseDown, ' ', this.targetRotationOnMouseDown);
-
-        },
-        onDocumentMouseMove: function( event ) {
-
-            this.mouseX = event.clientX - this.windowHalfX;
-            this.targetRotation = this.targetRotationOnMouseDown + ( this.mouseX - this.mouseXOnMouseDown ) * 0.02;
-        },
-
-        onDocumentMouseUp: function( event ) {
-
-            window.removeEventListener( 'mousemove', this.onDocumentMouseMove.bind(this), false );
-            window.removeEventListener( 'mouseup', this.onDocumentMouseUp.bind(this), false );
-            window.removeEventListener( 'mouseout', this.onDocumentMouseOut.bind(this), false );
-
-        },
-
-        onDocumentMouseOut: function( event ) {
-
-            window.removeEventListener( 'mousemove', this.onDocumentMouseMove.bind(this), false );
-            window.removeEventListener( 'mouseup', this.onDocumentMouseUp.bind(this), false );
-            window.removeEventListener( 'mouseout', this.onDocumentMouseOut.bind(this), false );
-
-            console.log('mouseOut',event.clientX);
-
-        },
-
-        onDocumentTouchStart: function( event ) {
-            if ( event.touches.length === 1 ) {
-
-                event.preventDefault();
-
-                this.mouseXOnMouseDown = event.touches[ 0 ].pageX - this.windowHalfX;
-                this.targetRotationOnMouseDown = this.targetRotation;
-
-                console.log('touchStart',event.clientX);
-
-            }
-        },
-
-        onDocumentTouchMove: function( event ) {
-
-            if ( event.touches.length === 1 ) {
-
-                event.preventDefault();
-
-                this.mouseX = event.touches[ 0 ].pageX - this.windowHalfX;
-                this.targetRotation = this.targetRotationOnMouseDown + ( this.mouseX - this.mouseXOnMouseDown ) * 0.05;
-
-                console.log('touchMove',event.clientX);
-
-            }
-
         }
+//        ,
+//        onDocumentMouseDown: function( event ) {
+//
+//            event.preventDefault();
+//
+//            window.addEventListener( 'mousemove', this.onDocumentMouseMove.bind(this), false );
+//            window.addEventListener( 'mouseup', this.onDocumentMouseUp.bind(this), false );
+//            window.addEventListener( 'mouseout', this.onDocumentMouseOut.bind(this), false );
+//
+//            this.mouseXOnMouseDown = event.clientX - this.windowHalfX;
+//            this.targetRotationOnMouseDown = this.targetRotation;
+//
+//            console.log('mouseDown',this.mouseXOnMouseDown, ' ', this.targetRotationOnMouseDown);
+//
+//        },
+//        onDocumentMouseMove: function( event ) {
+//
+//            this.mouseX = event.clientX - this.windowHalfX;
+//            this.targetRotation = this.targetRotationOnMouseDown + ( this.mouseX - this.mouseXOnMouseDown ) * 0.02;
+//        },
+//
+//        onDocumentMouseUp: function( event ) {
+//
+//            window.removeEventListener( 'mousemove', this.onDocumentMouseMove.bind(this), false );
+//            window.removeEventListener( 'mouseup', this.onDocumentMouseUp.bind(this), false );
+//            window.removeEventListener( 'mouseout', this.onDocumentMouseOut.bind(this), false );
+//
+//        },
+//
+//        onDocumentMouseOut: function( event ) {
+//
+//            window.removeEventListener( 'mousemove', this.onDocumentMouseMove.bind(this), false );
+//            window.removeEventListener( 'mouseup', this.onDocumentMouseUp.bind(this), false );
+//            window.removeEventListener( 'mouseout', this.onDocumentMouseOut.bind(this), false );
+//
+//            console.log('mouseOut',event.clientX);
+//
+//        },
+//
+//        onDocumentTouchStart: function( event ) {
+//            if ( event.touches.length === 1 ) {
+//
+//                event.preventDefault();
+//
+//                this.mouseXOnMouseDown = event.touches[ 0 ].pageX - this.windowHalfX;
+//                this.targetRotationOnMouseDown = this.targetRotation;
+//
+//                console.log('touchStart',event.clientX);
+//
+//            }
+//        },
+//
+//        onDocumentTouchMove: function( event ) {
+//
+//            if ( event.touches.length === 1 ) {
+//
+//                event.preventDefault();
+//
+//                this.mouseX = event.touches[ 0 ].pageX - this.windowHalfX;
+//                this.targetRotation = this.targetRotationOnMouseDown + ( this.mouseX - this.mouseXOnMouseDown ) * 0.05;
+//
+//                console.log('touchMove',event.clientX);
+//
+//            }
+//
+//        }
 
     });
 

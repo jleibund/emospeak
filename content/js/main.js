@@ -40,18 +40,23 @@ requirejs([
     'views/CubeView'
 ], function($, Backbone, CubeView) {
 
-    var fs   = require('fs'),
-        path = require('path'),
-        cwd  = process.cwd();
 
-    fs.readdirSync(cwd).forEach(function(child){
-        console.log('child', path.resolve(cwd, child));
-    });
+    function up(e) {return e.keyCode === 38}
+    function down(e) {return e.keyCode === 40}
+    function left(e) {return e.keyCode ===37}
+    function right(e) {return e.keyCode ===39}
+    function push(e) {return e.metaKey}
+    function pull(e) {return e.altKey}
+    function q(e) {return e.keyCode ===81}
+    function w(e) {return e.keyCode ===87}
+    function a(e) {return e.keyCode ===65}
+    function s(e) {return e.keyCode ===83}
+    function z(e) {return e.keyCode ===90}
+    function x(e) {return e.keyCode ===88}
 
-    addEventListener('app-ready', function(e){
+    var mongoose = require('mongoose'),
+        Controller = require('./lib/controller').Controller;
 
-//        window.dispatchEvent(new Event('app-done'));
-    });
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -59,16 +64,76 @@ requirejs([
         },
         main: function(){
 
+        //    var conn = mongoose.createConnection("mongodb://localhost/emospeak");
+            var controller = this.controller = new Controller({profile:'test', voice:'Ralph', rate:240});
+            controller.init(function(){
+
+//                controller.submitLine('chris had');
+//                controller.submitLine('chris wants');
+
+                controller.nextWord('chris');
+
+            });
+//
+//            controller.submitLine();
+
 
             var cubeView = this.cubeView = new CubeView();
-            console.log('cubeview',cubeView);
             cubeView.init();
-//            cubeView.animate();
+
+            var rotateAmt = 25;
+
+            controller.addListener(Controller.LIFT,function(e){cubeView.moveUp()});
+            controller.addListener(Controller.DROP,function(e){cubeView.moveDown()});
+            controller.addListener(Controller.LEFT,function(e){cubeView.moveLeft()});
+            controller.addListener(Controller.RIGHT,function(e){cubeView.moveRight()});
+            controller.addListener(Controller.PUSH,function(e){cubeView.movePush()});
+            controller.addListener(Controller.PULL,function(e){cubeView.movePull()});
+            controller.addListener(Controller.ROTATE_FWD,function(e){cubeView.rotateFwd()});
+            controller.addListener(Controller.ROTATE_BCK,function(e){cubeView.rotateBck()});
+            controller.addListener(Controller.ROTATE_CW,function(e){cubeView.rotateCW()});
+            controller.addListener(Controller.ROTATE_CCW,function(e){cubeView.rotateCCW()});
+            controller.addListener(Controller.ROTATE_LEFT,function(e){cubeView.rotateLeft()});
+            controller.addListener(Controller.ROTATE_RIGHT,function(e){cubeView.rotateRight()});
+            controller.addListener(Controller.NEUTRAL,function(e){cubeView.center()});
+
             $("#container").html(cubeView.render().el).show();
+
+            // test harness
+            window.addEventListener('keydown', function(e){
+                console.log('pressed: ', e.keyCode);
+                if (up(e)) {
+                    controller.emit(Controller.LIFT);
+                } else if (down(e)){
+                    controller.emit(Controller.DROP);
+                } else if (left(e)){
+                    controller.emit(Controller.LEFT);
+                } else if (right(e)){
+                    controller.emit(Controller.RIGHT);
+                } else if (push(e)){
+                    controller.emit(Controller.PUSH);
+                } else if (pull(e)){
+                    controller.emit(Controller.PULL);
+                } else if (q(e)){
+                    controller.emit(Controller.ROTATE_FWD);
+                } else if (w(e)){
+                    controller.emit(Controller.ROTATE_BCK);
+                } else if (a(e)){
+                    controller.emit(Controller.ROTATE_CW);
+                } else if (s(e)){
+                    controller.emit(Controller.ROTATE_CCW);
+                } else if (z(e)){
+                    controller.emit(Controller.ROTATE_LEFT);
+                } else if (x(e)){
+                    controller.emit(Controller.ROTATE_RIGHT);
+                }
+            });
+            window.addEventListener('keyup', function(e){
+                controller.emit(Controller.NEUTRAL);
+            });
+
         }
     });
-
-
 
     var router = new Router();
     router.main();

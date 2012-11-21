@@ -6,10 +6,12 @@
         "kn": "latest"
         , "appjs" : "0.0.20"
         , "WNdb" : "latest"
+        , "natural" : "latest"
         , "wordpos" : "latest"
         , "commander" : "latest"
         , "command" : "latest"
         , "underscore" : "latest"
         , "mongoose": "latest"
+        , "events" :"latest"
     }
 }
