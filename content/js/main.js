@@ -92,14 +92,22 @@ requirejs([
 
             var selectorView = this.footerView = new SelectorView();
             selectorView.init(controller);
+            selectorView.render();
 
-            controller.addListener(Controller.NEXTWORD,function(e,options){selectorView.wordOptions(e)});
+            controller.addListener(Controller.NEXTWORD,function(e){selectorView.wordOptions(e)});
+            controller.addListener(Controller.LIFT,function(e){selectorView.moveUp()});
+            controller.addListener(Controller.DROP,function(e){selectorView.moveDown()});
+            controller.addListener(Controller.RIGHT,function(e){selectorView.pick()});
+            controller.addListener(Controller.LEFT,function(e){footerView.remove()});
+
+            controller.addListener(Controller.SELECT,function(e){footerView.add(e)});
 
             $("#container").html(cubeView.render().el).show();
 
             controller.init(function(){
                 console.log('inited!')
                 controller.nextWord('');
+
             });
 
             // test harness
