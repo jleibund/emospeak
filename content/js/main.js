@@ -99,8 +99,12 @@ requirejs([
             controller.addListener(Controller.DROP,function(e){selectorView.moveDown()});
             controller.addListener(Controller.RIGHT,function(e){selectorView.pick()});
             controller.addListener(Controller.LEFT,function(e){footerView.remove()});
-
             controller.addListener(Controller.SELECT,function(e){footerView.add(e)});
+
+            // defaults - yes and no
+            controller.addListener(Controller.PUSH,function(e){controller.say('Yes')});
+            controller.addListener(Controller.PULL,function(e){controller.say('No')});
+
 
             $("#container").html(cubeView.render().el).show();
 
