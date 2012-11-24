@@ -6,6 +6,14 @@ define([
 
     var Controller = require('./lib/controller').Controller;
 
+    var symbols = {
+        1:':',
+        2:'/',
+        3:'@',
+        4:'http://',
+        5:'https://'
+    };
+
     var letters = {
         a:8.167,
         b:1.492,
