@@ -112,6 +112,9 @@ requirejs([
                 console.log('inited!')
                 controller.nextWord('');
 
+                // test
+                console.log('suggest for kri',controller.suggest('kris'));
+
             });
 
             // test harness

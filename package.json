@@ -8,6 +8,7 @@
         , "WNdb" : "latest"
         , "natural" : "latest"
         , "wordpos" : "latest"
+        , "spell": "latest"
         , "commander" : "latest"
         , "command" : "latest"
         , "underscore" : "latest"
