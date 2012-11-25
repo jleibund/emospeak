@@ -67,6 +67,19 @@ define([
             this.items = [];
             this.controller = controller;
             this.mode = 'word';
+
+
+            // setup mode button clicks
+            var self = this;
+            $('.btn-mini').each(function(){
+                $(this).click(function(){self.setMode($(this).attr('id'))});
+            });
+        },
+        setMode:function(mode){
+            console.log('new: ',mode, 'old:',this.mode);
+            $('#'+this.mode).removeClass('btn-primary');
+            $('#'+mode).addClass('btn-primary');
+            this.mode = mode;
         },
         wordOptions:function(options){
             var items = [];
