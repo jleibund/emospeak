@@ -94,10 +94,16 @@ requirejs([
             selectorView.init(controller);
             selectorView.render();
 
+
             controller.addListener(Controller.NEXTWORD,function(e){selectorView.wordOptions(e)});
             controller.addListener(Controller.LIFT,function(e){selectorView.moveUp()});
             controller.addListener(Controller.DROP,function(e){selectorView.moveDown()});
             controller.addListener(Controller.RIGHT,function(e){selectorView.pick()});
+            controller.addListener(Controller.MODE,function(e){selectorView.onSetMode(e)});
+
+            controller.addListener(Controller.ROTATE_CW,function(e){selectorView.nextMode()});
+            controller.addListener(Controller.ROTATE_CCW,function(e){selectorView.prevMode()});
+
             controller.addListener(Controller.LEFT,function(e){footerView.remove()});
             controller.addListener(Controller.SELECT,function(e){footerView.add(e)});
 
@@ -114,8 +120,11 @@ requirejs([
             });
 
             // test harness
+            var throttle = false;
             window.addEventListener('keydown', function(e){
                 console.log('pressed: ', e.keyCode);
+                if (throttle) return;
+
                 if (up(e)) {
                     controller.emit(Controller.LIFT);
                 } else if (down(e)){
@@ -132,18 +141,21 @@ requirejs([
                     controller.emit(Controller.ROTATE_FWD);
                 } else if (w(e)){
                     controller.emit(Controller.ROTATE_BCK);
-                } else if (a(e)){
-                    controller.emit(Controller.ROTATE_CW);
                 } else if (s(e)){
+                    controller.emit(Controller.ROTATE_CW);
+                } else if (a(e)){
                     controller.emit(Controller.ROTATE_CCW);
                 } else if (z(e)){
                     controller.emit(Controller.ROTATE_LEFT);
                 } else if (x(e)){
                     controller.emit(Controller.ROTATE_RIGHT);
                 }
+
+                throttle = true;
             });
             window.addEventListener('keyup', function(e){
                 controller.emit(Controller.NEUTRAL);
+                throttle = false;
             });
 
         }

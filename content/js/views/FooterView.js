@@ -44,7 +44,9 @@ define([
             var output = $('#output');
             console.log('add',text);
             if (text){
-                var val = output.val()+' '+text;
+                var mode = this.controller.getMode();
+                var space = (mode =='word')? ' ':'';
+                var val = output.val()+space+text;
                 output.val(val);
                 this.words = tokenizer.tokenize(val);
 
@@ -55,15 +57,17 @@ define([
         },
         remove: function(){
             // need to replace with something better and/or use unigram parsing here.
+            var mode = this.controller.getMode();
             var output = $('#output');
             console.log('remove');
-            if (this.words.length>0){
+            if (mode == 'word' && this.words.length>0){
                 this.words.pop();
                 var val = this.words.join(' ');
                 output.val(val);
                 this.controller.nextWord(val);
+            } else {
+                output.val(output.val().substring(0,output.val().length-1));
             }
-
         }
     });
 

@@ -166,11 +166,11 @@ define([
             this.rotate('x',-this.ROTATE_AMT);
 
         },
-        rotateCW:function(){
+        rotateCCW:function(){
             this.rotate('z',this.ROTATE_AMT);
 
         },
-        rotateCCW:function(){
+        rotateCW:function(){
             this.rotate('z',-this.ROTATE_AMT);
         },
 
