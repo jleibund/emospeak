@@ -90,7 +90,7 @@ requirejs([
             var footerView = this.footerView = new FooterView();
             footerView.init(controller);
 
-            var selectorView = this.footerView = new SelectorView();
+            var selectorView = this.selectorView = new SelectorView();
             selectorView.init(controller);
             selectorView.render();
 
