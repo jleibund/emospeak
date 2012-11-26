@@ -57,36 +57,28 @@ define([
         loaded:false,
         render:function(){
 
-            this.table.empty();
 
             this.options = [];
             var mode = this.controller.getMode();
             this.options = this[mode];
-//            if (mode == 'word'){
-//                this.options = this.items;
-//            } else if (mode == 'vowels'){
-//                this.options = this.vowels;
-//            } else if (mode == 'c1'){
-//                this.options = this.c1;
-//            } else {
-//                this.options = this.letters;
-//            }
 
             var str = '', idx = 0;
-            var select = '<i class="icon-arrow-right">';
+//            var select = '<i class="icon-arrow-right">';
+            var select = '*';
+            var self = this;
             _.each(this.options, function(item){
-                var sel = (idx == this.selected)? select : '&nbsp';
+                var sel = (idx == self.selected)? select : '&nbsp;';
                 str += '<tr wordid="'+idx+'" word="'+item+'"><td>'+sel+'</td><td>'+item+'</td></tr>';
                 idx++;
-            },this);
+            });
 
-
-            this.table.append($(str));
+            this.table.empty().append($(str));
 
             return this;
         },
         init: function(controller){
             this.table = $('.table');
+            this.selected = 0;
             this.items = [];
             this.controller = controller;
             this.c1=[];
@@ -150,8 +142,7 @@ define([
                     }
                 });
             }
-            this.items = items;
-            console.log('items',this.items);
+            this.word = items;
 
             this.render();
         },

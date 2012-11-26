@@ -96,16 +96,16 @@ requirejs([
 
 
             controller.addListener(Controller.NEXTWORD,function(e){selectorView.wordOptions(e)});
-            controller.addListener(Controller.LIFT,function(e){selectorView.moveUp()});
-            controller.addListener(Controller.DROP,function(e){selectorView.moveDown()});
-            controller.addListener(Controller.RIGHT,function(e){selectorView.pick()});
-            controller.addListener(Controller.MODE,function(e){selectorView.onSetMode(e)});
+            controller.addListener(Controller.LIFT,function(e){if (!e.throttle) selectorView.moveUp()});
+            controller.addListener(Controller.DROP,function(e){if (!e.throttle) selectorView.moveDown()});
+            controller.addListener(Controller.RIGHT,function(e){if (!e.throttle) selectorView.pick()});
+            controller.addListener(Controller.MODE,function(e){if (!e.throttle) selectorView.onSetMode(e)});
 
-            controller.addListener(Controller.ROTATE_CW,function(e){selectorView.nextMode()});
-            controller.addListener(Controller.ROTATE_CCW,function(e){selectorView.prevMode()});
+            controller.addListener(Controller.ROTATE_CW,function(e){if (!e.throttle) selectorView.nextMode()});
+            controller.addListener(Controller.ROTATE_CCW,function(e){if (!e.throttle) selectorView.prevMode()});
 
-            controller.addListener(Controller.LEFT,function(e){footerView.remove()});
-            controller.addListener(Controller.SELECT,function(e){footerView.add(e)});
+            controller.addListener(Controller.LEFT,function(e){if (!e.throttle) footerView.remove()});
+            controller.addListener(Controller.SELECT,function(e){if (!e.throttle) footerView.add(e)});
 
             // defaults - yes and no
             controller.addListener(Controller.PUSH,function(e){controller.say('Yes')});
@@ -123,32 +123,33 @@ requirejs([
             var throttle = false;
             window.addEventListener('keydown', function(e){
                 console.log('pressed: ', e.keyCode);
-                if (throttle) return;
+
+                e.throttle = throttle;
 
                 if (up(e)) {
-                    controller.emit(Controller.LIFT);
+                    controller.emit(Controller.LIFT,e);
                 } else if (down(e)){
-                    controller.emit(Controller.DROP);
+                    controller.emit(Controller.DROP,e);
                 } else if (left(e)){
-                    controller.emit(Controller.LEFT);
+                    controller.emit(Controller.LEFT,e);
                 } else if (right(e)){
-                    controller.emit(Controller.RIGHT);
+                    controller.emit(Controller.RIGHT,e);
                 } else if (push(e)){
-                    controller.emit(Controller.PUSH);
+                    controller.emit(Controller.PUSH,e);
                 } else if (pull(e)){
-                    controller.emit(Controller.PULL);
+                    controller.emit(Controller.PULL,e);
                 } else if (q(e)){
-                    controller.emit(Controller.ROTATE_FWD);
+                    controller.emit(Controller.ROTATE_FWD,e);
                 } else if (w(e)){
-                    controller.emit(Controller.ROTATE_BCK);
+                    controller.emit(Controller.ROTATE_BCK,e);
                 } else if (s(e)){
-                    controller.emit(Controller.ROTATE_CW);
+                    controller.emit(Controller.ROTATE_CW,e);
                 } else if (a(e)){
-                    controller.emit(Controller.ROTATE_CCW);
+                    controller.emit(Controller.ROTATE_CCW,e);
                 } else if (z(e)){
-                    controller.emit(Controller.ROTATE_LEFT);
+                    controller.emit(Controller.ROTATE_LEFT,e);
                 } else if (x(e)){
-                    controller.emit(Controller.ROTATE_RIGHT);
+                    controller.emit(Controller.ROTATE_RIGHT,e);
                 }
 
                 throttle = true;
