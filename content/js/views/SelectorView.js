@@ -66,6 +66,9 @@ define([
 //            var select = '<i class="icon-arrow-right">';
             var select = '*';
             var self = this;
+
+            console.log('select:',this.selected, 'options', this.options);
+
             _.each(this.options, function(item){
                 var sel = (idx == self.selected)? select : '&nbsp;';
                 str += '<tr wordid="'+idx+'" word="'+item+'"><td>'+sel+'</td><td>'+item+'</td></tr>';
@@ -134,6 +137,7 @@ define([
         },
         wordOptions:function(options){
             var items = [];
+            var mode = this.controller.getMode();
             if (options){
                 _.each(options, function(opt){
                     if (opt && opt.words){
@@ -143,7 +147,7 @@ define([
                 });
             }
             this.word = items;
-
+            if (mode =='word') this.selected = 0;
             this.render();
         },
         setSelection: function(idx){
@@ -161,7 +165,7 @@ define([
         },
         pick: function(){
 //            console.log('pick', this.items[this.selected])
-            if (this.options && this.options.length > 0)
+            if (this.options && this.options.length > this.selected)
                 this.controller.emit(Controller.SELECT,this.options[this.selected]);
         }
     });

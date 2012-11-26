@@ -152,10 +152,10 @@ define([
             this.move('z',this.PULL_Z)
         },
         rotateLeft:function(){
-            this.rotate('y',this.ROTATE_AMT);
+            this.rotate('y',-this.ROTATE_AMT);
         },
         rotateRight:function(){
-            this.rotate('y',-this.ROTATE_AMT);
+            this.rotate('y',this.ROTATE_AMT);
 
         },
         rotateFwd:function(){

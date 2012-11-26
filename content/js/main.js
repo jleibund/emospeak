@@ -106,6 +106,7 @@ requirejs([
 
             controller.addListener(Controller.LEFT,function(e){if (!e.throttle) footerView.remove()});
             controller.addListener(Controller.SELECT,function(e){if (!e.throttle) footerView.add(e)});
+            controller.addListener(Controller.ROTATE_RIGHT,function(e){if (!e.throttle) footerView.add(' ')});
 
             // defaults - yes and no
             controller.addListener(Controller.PUSH,function(e){controller.say('Yes')});

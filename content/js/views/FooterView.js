@@ -18,7 +18,7 @@ define([
             this.val = '';
             this.words = [];
             this.controller = controller;
-            var output = $('#output');
+            var output = this.output = $('#output');
 
             output.keyup(function(){
 //                console.log(output.val());
@@ -33,11 +33,19 @@ define([
             });
 
             $('#submit').click(function(){
-                controller.submitLine(output.val());
-                controller.say(output.val());
-                output.val('');
+                this.submit();
+                this.say();
             });
 
+        },
+        submit: function(){
+            this.controller.submitLine(this.output.val());
+        },
+        clear: function(){
+            this.output.val('');
+        },
+        say: function(){
+            this.controller.say(this.output.val());
         },
         add: function(text){
             // need to replace with something better and/or use unigram parsing here.
