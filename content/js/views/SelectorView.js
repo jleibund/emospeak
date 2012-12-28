@@ -1,10 +1,11 @@
 define([
     'jquery',
     'underscore',
-    'backbone'
-], function($, _, Backbone){
+    'backbone',
+    'controller-proxy'
+], function($, _, Backbone, Controller){
 
-    var Controller = require('./lib/controller').Controller;
+//    var Controller = require('./lib/controller').Controller;
 
     var symbols = {
         1:':',
@@ -120,7 +121,7 @@ define([
             this.controller.setMode('word');
         },
         onSetMode:function(e){
-            $('#'+ e.old).removeClass('btn-primary');
+            if (e.old) $('#'+ e.old).removeClass('btn-primary');
             $('#'+ e.mode).addClass('btn-primary');
             this.selected = 0;
             this.render();
@@ -166,7 +167,7 @@ define([
         pick: function(){
 //            console.log('pick', this.items[this.selected])
             if (this.options && this.options.length > this.selected)
-                this.controller.emit(Controller.SELECT,this.options[this.selected]);
+                this.controller.emit(Controller.events.SELECT,this.options[this.selected]);
         }
     });
 

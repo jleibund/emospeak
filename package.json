@@ -4,7 +4,9 @@
     , "private": true
     , "dependencies": {
         "kn": "latest"
-        , "appjs" : "0.0.20"
+        , "express" : "latest"
+        , "socket.io" : "latest"
+        , "emojs" : "latest"
         , "WNdb" : "latest"
         , "natural" : "latest"
         , "wordpos" : "latest"
@@ -12,7 +14,6 @@
         , "commander" : "latest"
         , "command" : "latest"
         , "underscore" : "latest"
-        , "mongoose": "latest"
         , "events" :"latest"
     }
 }

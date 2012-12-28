@@ -5,6 +5,8 @@ requirejs.config({
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
         three: 'libs/three/three.min',
+        socket: 'libs/socket.io/socket.io',
+        eventemitter: 'libs/eventemitter/EventEmitter',
         stats: 'libs/three/stats.min',
         detector: 'libs/three/Detector',
         templates: '../templates',
@@ -17,6 +19,12 @@ requirejs.config({
         backbone: {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
+        },
+        socket: {
+            exports: 'io'
+        },
+        eventemitter: {
+            exports: 'EventEmitter'
         },
         'backbone.localStorage': {
             deps: ['backbone'],
@@ -39,8 +47,9 @@ requirejs([
     'backbone',
     'views/CubeView',
     'views/FooterView',
-    'views/SelectorView'
-], function($, Backbone, CubeView, FooterView, SelectorView) {
+    'views/SelectorView',
+    'controller-proxy'
+], function($, Backbone, CubeView, FooterView, SelectorView, Controller) {
 
 
     function up(e) {return e.keyCode === 38}
@@ -56,9 +65,6 @@ requirejs([
     function z(e) {return e.keyCode ===90}
     function x(e) {return e.keyCode ===88}
 
-    var mongoose = require('mongoose'),
-        Controller = require('./lib/controller').Controller;
-
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -67,21 +73,26 @@ requirejs([
         main: function(){
 
         //    var conn = mongoose.createConnection("mongodb://localhost/emospeak");
-            var controller = this.controller = new Controller({profile:'test', voice:'Ralph', rate:240});
+            var controller = this.controller = new Controller();
 
-            controller.addListener(Controller.LIFT,function(e){cubeView.moveUp()});
-            controller.addListener(Controller.DROP,function(e){cubeView.moveDown()});
-            controller.addListener(Controller.LEFT,function(e){cubeView.moveLeft()});
-            controller.addListener(Controller.RIGHT,function(e){cubeView.moveRight()});
-            controller.addListener(Controller.PUSH,function(e){cubeView.movePush()});
-            controller.addListener(Controller.PULL,function(e){cubeView.movePull()});
-            controller.addListener(Controller.ROTATE_FWD,function(e){cubeView.rotateFwd()});
-            controller.addListener(Controller.ROTATE_BCK,function(e){cubeView.rotateBck()});
-            controller.addListener(Controller.ROTATE_CW,function(e){cubeView.rotateCW()});
-            controller.addListener(Controller.ROTATE_CCW,function(e){cubeView.rotateCCW()});
-            controller.addListener(Controller.ROTATE_LEFT,function(e){cubeView.rotateLeft()});
-            controller.addListener(Controller.ROTATE_RIGHT,function(e){cubeView.rotateRight()});
-            controller.addListener(Controller.NEUTRAL,function(e){cubeView.center()});
+
+            controller.addListener(Controller.events.BLINK,function(e){cubeView.moveUp()});
+            controller.addListener(Controller.events.LOOK_LEFT,function(e){cubeView.moveLeft()});
+            controller.addListener(Controller.events.LOOK_RIGHT,function(e){cubeView.moveRight()});
+
+//            controller.addListener(Controller.events.LIFT,function(e){cubeView.moveUp()});
+//            controller.addListener(Controller.events.DROP,function(e){cubeView.moveDown()});
+//            controller.addListener(Controller.events.LEFT,function(e){cubeView.moveLeft()});
+//            controller.addListener(Controller.events.RIGHT,function(e){cubeView.moveRight()});
+//            controller.addListener(Controller.events.PUSH,function(e){cubeView.movePush()});
+//            controller.addListener(Controller.events.PULL,function(e){cubeView.movePull()});
+//            controller.addListener(Controller.events.ROTATE_FWD,function(e){cubeView.rotateFwd()});
+//            controller.addListener(Controller.events.ROTATE_BCK,function(e){cubeView.rotateBck()});
+//            controller.addListener(Controller.events.ROTATE_CW,function(e){cubeView.rotateCW()});
+//            controller.addListener(Controller.events.ROTATE_CCW,function(e){cubeView.rotateCCW()});
+//            controller.addListener(Controller.events.ROTATE_LEFT,function(e){cubeView.rotateLeft()});
+//            controller.addListener(Controller.events.ROTATE_RIGHT,function(e){cubeView.rotateRight()});
+//            controller.addListener(Controller.events.NEUTRAL,function(e){cubeView.center()});
 
 
             var cubeView = this.cubeView = new CubeView();
@@ -95,73 +106,71 @@ requirejs([
             selectorView.render();
 
 
-            controller.addListener(Controller.NEXTWORD,function(e){selectorView.wordOptions(e)});
-            controller.addListener(Controller.LIFT,function(e){if (!e.throttle) selectorView.moveUp()});
-            controller.addListener(Controller.DROP,function(e){if (!e.throttle) selectorView.moveDown()});
-            controller.addListener(Controller.RIGHT,function(e){if (!e.throttle) selectorView.pick()});
-            controller.addListener(Controller.MODE,function(e){if (!e.throttle) selectorView.onSetMode(e)});
+            controller.addListener(Controller.events.NEXTWORD,function(e){selectorView.wordOptions(e)});
+            controller.addListener(Controller.events.LIFT,function(e){ selectorView.moveUp()});
+            controller.addListener(Controller.events.DROP,function(e){ selectorView.moveDown()});
+            controller.addListener(Controller.events.RIGHT,function(e){ selectorView.pick()});
+            controller.addListener(Controller.events.MODE,function(e){ selectorView.onSetMode(e)});
 
-            controller.addListener(Controller.ROTATE_CW,function(e){if (!e.throttle) selectorView.nextMode()});
-            controller.addListener(Controller.ROTATE_CCW,function(e){if (!e.throttle) selectorView.prevMode()});
+            controller.addListener(Controller.events.ROTATE_CW,function(e){selectorView.nextMode()});
+            controller.addListener(Controller.events.ROTATE_CCW,function(e){selectorView.prevMode()});
 
-            controller.addListener(Controller.LEFT,function(e){if (!e.throttle) footerView.remove()});
-            controller.addListener(Controller.SELECT,function(e){if (!e.throttle) footerView.add(e)});
-            controller.addListener(Controller.ROTATE_RIGHT,function(e){if (!e.throttle) footerView.add(' ')});
+            controller.addListener(Controller.events.LEFT,function(e){footerView.remove()});
+            controller.addListener(Controller.events.SELECT,function(e){footerView.add(e)});
+            controller.addListener(Controller.events.ROTATE_RIGHT,function(e){ footerView.add(' ')});
 
             // defaults - yes and no
-            controller.addListener(Controller.PUSH,function(e){controller.say('Yes')});
-            controller.addListener(Controller.PULL,function(e){controller.say('No')});
+            controller.addListener(Controller.events.PUSH,function(e){controller.say('Yes')});
+            controller.addListener(Controller.events.PULL,function(e){controller.say('No')});
 
 
             $("#container").html(cubeView.render().el).show();
 
-            controller.init(function(){
-                console.log('inited!')
-                controller.nextWord('');
-            });
+            controller.nextWord('');
 
             // test harness
-            var throttle = false;
-            window.addEventListener('keydown', function(e){
-                console.log('pressed: ', e.keyCode);
-
-                e.throttle = throttle;
-
-                if (up(e)) {
-                    controller.emit(Controller.LIFT,e);
-                } else if (down(e)){
-                    controller.emit(Controller.DROP,e);
-                } else if (left(e)){
-                    controller.emit(Controller.LEFT,e);
-                } else if (right(e)){
-                    controller.emit(Controller.RIGHT,e);
-                } else if (push(e)){
-                    controller.emit(Controller.PUSH,e);
-                } else if (pull(e)){
-                    controller.emit(Controller.PULL,e);
-                } else if (q(e)){
-                    controller.emit(Controller.ROTATE_FWD,e);
-                } else if (w(e)){
-                    controller.emit(Controller.ROTATE_BCK,e);
-                } else if (s(e)){
-                    controller.emit(Controller.ROTATE_CW,e);
-                } else if (a(e)){
-                    controller.emit(Controller.ROTATE_CCW,e);
-                } else if (z(e)){
-                    controller.emit(Controller.ROTATE_LEFT,e);
-                } else if (x(e)){
-                    controller.emit(Controller.ROTATE_RIGHT,e);
-                }
-
-                throttle = true;
-            });
-            window.addEventListener('keyup', function(e){
-                controller.emit(Controller.NEUTRAL);
-                throttle = false;
-            });
+//            var throttle = false;
+//            window.addEventListener('keydown', function(e){
+//                console.log('pressed: ', e.keyCode);
+//
+//                e.throttle = throttle;
+//
+//                if (up(e)) {
+//                    controller.emit(Controller.events.LIFT,e);
+//                } else if (down(e)){
+//                    controller.emit(Controller.events.DROP,e);
+//                } else if (left(e)){
+//                    controller.emit(Controller.events.LEFT,e);
+//                } else if (right(e)){
+//                    controller.emit(Controller.events.RIGHT,e);
+//                } else if (push(e)){
+//                    controller.emit(Controller.events.PUSH,e);
+//                } else if (pull(e)){
+//                    controller.emit(Controller.events.PULL,e);
+//                } else if (q(e)){
+//                    controller.emit(Controller.events.ROTATE_FWD,e);
+//                } else if (w(e)){
+//                    controller.emit(Controller.events.ROTATE_BCK,e);
+//                } else if (s(e)){
+//                    controller.emit(Controller.events.ROTATE_CW,e);
+//                } else if (a(e)){
+//                    controller.emit(Controller.events.ROTATE_CCW,e);
+//                } else if (z(e)){
+//                    controller.emit(Controller.events.ROTATE_LEFT,e);
+//                } else if (x(e)){
+//                    controller.emit(Controller.events.ROTATE_RIGHT,e);
+//                }
+//
+//                throttle = true;
+//            });
+//            window.addEventListener('keyup', function(e){
+//                controller.emit(Controller.events.NEUTRAL);
+//                throttle = false;
+//            });
 
         }
     });
+//    Backbone.history.start();
 
     var router = new Router();
     router.main();

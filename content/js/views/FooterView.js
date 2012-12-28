@@ -4,9 +4,6 @@ define([
     'backbone'
 ], function($, _, Backbone){
 
-    var natural = require('natural'),
-        tokenizer = new natural.WordTokenizer();
-
     var FooterView = Backbone.View.extend({
         loaded:false,
         render:function(){
@@ -20,21 +17,22 @@ define([
             this.controller = controller;
             var output = this.output = $('#output');
 
+            var self = this;
             output.keyup(function(){
 //                console.log(output.val());
 
                 var val = output.val();
-                if (this.val != val){
+                if (self.val != val){
                     controller.nextWord(val);
-                    this.val = val;
-                    this.words = tokenizer.tokenize(val);
+                    self.val = val;
+                    self.words = val.split(' ');
                 }
 //                console.log('val',val,'options2',options);
             });
 
             $('#submit').click(function(){
-                this.submit();
-                this.say();
+                self.submit();
+                self.say();
             });
 
         },
@@ -51,12 +49,12 @@ define([
             // need to replace with something better and/or use unigram parsing here.
             var output = $('#output');
             console.log('add',text);
-            if (text){
+            if (text && text != ''){
                 var mode = this.controller.getMode();
                 var space = (mode =='word')? ' ':'';
                 var val = output.val()+space+text;
                 output.val(val);
-                this.words = tokenizer.tokenize(val);
+                this.words = val.split(' ');
 
                 console.log('words',this.words);
 
