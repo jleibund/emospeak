@@ -15,7 +15,7 @@ define([
             _.each(Controller.events, function(event){
 
                 var emit = function(data){
-                    console.log('socket',event, data);
+                   // console.log('socket',event, data);
                     self.ee.emit(event,data);
                 };
 
