@@ -24,10 +24,10 @@ define([
             this.ee.addListener(event,cb);
             return this;
         },
-        say: function(msg, cb){ call(msg,cb, 'say') },
-        submitLine: function(msg, cb){ call(msg,cb, 'submitLine') },
-        suggest: function(msg, cb){ call(msg,cb, 'suggest') },
-        nextWord: function(msg, cb){ call(msg,cb, 'nextWord') },
+        say: function(msg, cb){ this.call(msg,cb, 'say') },
+        submitLine: function(msg, cb){ this.call(msg,cb, 'submitLine') },
+        suggest: function(msg, cb){ this.call(msg,cb, 'suggest') },
+        nextWord: function(msg, cb){ this.call(msg,cb, 'nextWord') },
         call: function(msg, cb, verb){
             $.getJSON('/'+verb+'?term=' + msg, function (obj, err) {
                 if (cb) cb(obj.payload);
