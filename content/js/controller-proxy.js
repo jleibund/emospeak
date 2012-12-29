@@ -19,12 +19,14 @@ define([
                     self.ee.emit(event,data);
                 };
 
-                if (!~event.indexOf('/CONTROL')){
-                    emit = _.debounce(emit,500,true);
-                }
 
                 self.socket.on(event, emit);
             })
+            socket.on('connect', function () {
+                self.nextWord();
+            });
+//            socket.on('disconnect', function () {
+//            });
         },
         addListener: function(event, cb){
             this.ee.addListener(event, cb);

@@ -23,7 +23,7 @@ define([
 
                 var val = output.val();
                 if (self.val != val){
-                    controller.nextWord(val);
+                    self.controller.nextWord(val);
                     self.val = val;
                     self.words = val.split(' ');
                 }
