@@ -12,11 +12,16 @@ define([
             this.ee = new EventEmitter();
             var socket = this.socket = io.connect('http://localhost:4000/events');
             var self = this;
+            this.lastEvent = Controller.events.NEUTRAL;
             _.each(Controller.events, function(event){
 
                 var emit = function(data){
                    // console.log('socket',event, data);
-                    self.ee.emit(event,data);
+                    var doubles = Controller.doubles[event];
+                    if (!doubles || doubles && self.lastEvent != event)
+                        self.ee.emit(event,data);
+
+                    self.lastEvent = event;
                 };
 
 
@@ -84,6 +89,10 @@ define([
     Controller.events.SELECT = '/CONTROL/SELECT';
     Controller.events.MODE = '/CONTROL/MODE';
     Controller.events.SUGGEST = '/CONTROL/SUGGEST';
+
+    Controller.doubles = [Controller.events.BLINK, Controller.events.LOOK_LEFT,
+        Controller.events.LOOK_RIGHT, Controller.events.WINK_LEFT, Controller.events.WINK_RIGHT,
+        Controller.events.LIFT, Controller.events.DROP];
 
     return Controller;
 

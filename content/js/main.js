@@ -88,8 +88,8 @@ requirejs([
 
             controller.addListener(Controller.events.LIFT,function(e){cubeView.moveUp()});
             controller.addListener(Controller.events.DROP,function(e){cubeView.moveDown()});
-//            controller.addListener(Controller.events.LEFT,function(e){cubeView.moveLeft()});
-//            controller.addListener(Controller.events.RIGHT,function(e){cubeView.moveRight()});
+            controller.addListener(Controller.events.LEFT,function(e){cubeView.moveLeft()});
+            controller.addListener(Controller.events.RIGHT,function(e){cubeView.moveRight()});
             controller.addListener(Controller.events.PUSH,function(e){cubeView.movePush()});
             controller.addListener(Controller.events.PULL,function(e){cubeView.movePull()});
 //            controller.addListener(Controller.events.ROTATE_FWD,function(e){cubeView.rotateFwd()});
@@ -103,13 +103,13 @@ requirejs([
             controller.addListener(Controller.events.NEXTWORD,function(e){console.log('e',e), selectorView.wordOptions(e)});
             controller.addListener(Controller.events.LIFT,function(e){ selectorView.moveUp()});
             controller.addListener(Controller.events.DROP,function(e){ selectorView.moveDown()});
-            controller.addListener(Controller.events.LOOK_RIGHT,function(e){ selectorView.pick()});
+            controller.addListener(Controller.events.WINK_RIGHT,function(e){ selectorView.pick()});
 
             controller.addListener(Controller.events.MODE,function(e){ selectorView.onSetMode(e)});
-            controller.addListener(Controller.events.WINK_RIGHT,function(e){selectorView.nextMode()});
-            controller.addListener(Controller.events.WINK_LEFT,function(e){selectorView.prevMode()});
+            controller.addListener(Controller.events.RIGHT,function(e){selectorView.nextMode()});
+            controller.addListener(Controller.events.LEFT,function(e){selectorView.prevMode()});
 
-            controller.addListener(Controller.events.LOOK_LEFT, function(e){footerView.remove()});
+            controller.addListener(Controller.events.WINK_LEFT, function(e){footerView.remove()});
             controller.addListener(Controller.events.SELECT,function(e){footerView.add(e)});
           //  controller.addListener(Controller.events.BLINK,function(e){ footerView.add(' ')});
             controller.addListener(Controller.events.BLINK,function(e){ footerView.say()});

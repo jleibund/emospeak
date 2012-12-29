@@ -65,7 +65,7 @@ io.of('/events').on('connection',function(socket){
     _.each(Controller.events, function(event){
         var emit = function(data){socket.emit(event,data)};
         if (!~event.indexOf('/CONTROL')){
-            emit = _.debounce(emit,1000,true);
+            emit = _.debounce(emit,700,true);
         }
 
         controller.addListener(event, emit);
