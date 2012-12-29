@@ -55,11 +55,10 @@ app.get('/suggest', function(req, res, next){
 
 
 
-process.on('SIGINT', function () {
-    console.log("Server shutdown...");
-    controller.epoc.disconnect();
-    process.exit();
-});
+//process.on('SIGINT', function () {
+//    controller.epoc.disconnect();
+//    process.kill(process.pid);
+//});
 
 io.of('/events').on('connection',function(socket){
     _.each(Controller.events, function(event){
@@ -67,9 +66,6 @@ io.of('/events').on('connection',function(socket){
     });
 });
 
-//io.sockets.on('connection', function (socket) {
-//    socket.emit('news', { hello: 'world' });
-//});
 
 
 

@@ -10,11 +10,11 @@ define([
 
             return this;
         },
-        init: function(controller){
+        initialize: function(){
 
             this.val = '';
             this.words = [];
-            this.controller = controller;
+            this.controller = this.options.controller;
             var output = this.output = $('#output');
 
             var self = this;

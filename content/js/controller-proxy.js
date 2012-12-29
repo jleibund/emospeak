@@ -13,17 +13,24 @@ define([
             var socket = this.socket = io.connect('http://localhost:4000/events');
             var self = this;
             _.each(Controller.events, function(event){
-                self.socket.on(event,function(data){
-                    console.log('socket',event, data);
 
+                var emit = function(data){
+                    console.log('socket',event, data);
                     self.ee.emit(event,data);
-                });
+                };
+
+                if (!~event.indexOf('/CONTROL')){
+                    emit = _.debounce(emit,500,true);
+                }
+
+                self.socket.on(event, emit);
             })
         },
         addListener: function(event, cb){
-            this.ee.addListener(event,cb);
+            this.ee.addListener(event, cb);
             return this;
         },
+        emit: function(event, e){ this.ee.emit(event,e)},
         say: function(msg, cb){ this.call(msg,cb, 'say') },
         submitLine: function(msg, cb){ this.call(msg,cb, 'submitLine') },
         suggest: function(msg, cb){ this.call(msg,cb, 'suggest') },

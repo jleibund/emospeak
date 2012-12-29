@@ -59,18 +59,20 @@ define([
         render:function(){
 
 
-            this.options = [];
+            this.choices = [];
             var mode = this.controller.getMode();
-            this.options = this[mode];
+            this.choices = this[mode];
+
+            if (!mode) this.controller.setMode('word');
 
             var str = '', idx = 0;
 //            var select = '<i class="icon-arrow-right">';
             var select = '*';
             var self = this;
 
-            console.log('select:',this.selected, 'options', this.options);
+            console.log('select:',this.selected, 'choices', this.choices);
 
-            _.each(this.options, function(item){
+            _.each(this.choices, function(item){
                 var sel = (idx == self.selected)? select : '&nbsp;';
                 str += '<tr wordid="'+idx+'" word="'+item+'"><td>'+sel+'</td><td>'+item+'</td></tr>';
                 idx++;
@@ -80,11 +82,12 @@ define([
 
             return this;
         },
-        init: function(controller){
+        initialize: function(){
+            console.log('initialize',this.options);
             this.table = $('.table');
             this.selected = 0;
             this.items = [];
-            this.controller = controller;
+            this.controller = this.options.controller;
             this.c1=[];
             this.c2=[];
             this.c3=[];
@@ -118,11 +121,13 @@ define([
                 self.modeOrder.push(id);
             });
 
-            this.controller.setMode('word');
         },
         onSetMode:function(e){
             if (e.old) $('#'+ e.old).removeClass('btn-primary');
             $('#'+ e.mode).addClass('btn-primary');
+            if (!this.choices){
+                this.controller.nextWord('');
+            }
             this.selected = 0;
             this.render();
         },
@@ -137,6 +142,7 @@ define([
             if (idx > 0) this.controller.setMode(this.modeOrder[idx-1]);
         },
         wordOptions:function(options){
+            console.log('wordOptions',options)
             var items = [];
             var mode = this.controller.getMode();
             if (options){
@@ -153,7 +159,7 @@ define([
         },
         setSelection: function(idx){
             if (!idx) idx = 0;
-            if (!this.options || idx < 0 || idx > this.options.length-1) return;
+            if (!this.choices || idx < 0 || idx > this.choices.length-1) return;
 
             this.selected = idx;
             this.render();
@@ -165,9 +171,8 @@ define([
             this.setSelection(this.selected+1);
         },
         pick: function(){
-//            console.log('pick', this.items[this.selected])
-            if (this.options && this.options.length > this.selected)
-                this.controller.emit(Controller.events.SELECT,this.options[this.selected]);
+            if (this.choices && this.choices.length > this.selected)
+                this.controller.emit(Controller.events.SELECT,this.choices[this.selected]);
         }
     });
 

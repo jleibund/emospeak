@@ -39,7 +39,7 @@ define([
             this.stats.update();
             return this;
         },
-        init: function() {
+        initialize: function() {
 
             this.UP_Y=this.NEUTRAL_Y+this.UPDOWN_AMT;
             this.DOWN_Y=this.NEUTRAL_Y-this.UPDOWN_AMT;

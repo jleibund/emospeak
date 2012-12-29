@@ -74,19 +74,22 @@ requirejs([
 
         //    var conn = mongoose.createConnection("mongodb://localhost/emospeak");
             var controller = this.controller = new Controller();
+            var selectorView = this.selectorView = new SelectorView({controller:controller});
+            var cubeView = this.cubeView = new CubeView({controller:controller});
+            var footerView = this.footerView = new FooterView({controller:controller});
 
 
             controller.addListener(Controller.events.BLINK,function(e){cubeView.center()});
-            controller.addListener(Controller.events.LOOK_LEFT,function(e){cubeView.moveLeft()});
-            controller.addListener(Controller.events.LOOK_RIGHT,function(e){cubeView.moveRight()});
+//            controller.addListener(Controller.events.LOOK_LEFT,function(e){cubeView.moveLeft()});
+//            controller.addListener(Controller.events.LOOK_RIGHT,function(e){cubeView.moveRight()});
 
             controller.addListener(Controller.events.WINK_LEFT,function(e){cubeView.movePush()});
             controller.addListener(Controller.events.WINK_RIGHT,function(e){cubeView.movePull()});
 
-//            controller.addListener(Controller.events.LIFT,function(e){cubeView.moveUp()});
-//            controller.addListener(Controller.events.DROP,function(e){cubeView.moveDown()});
-//            controller.addListener(Controller.events.LEFT,function(e){cubeView.moveLeft()});
-//            controller.addListener(Controller.events.RIGHT,function(e){cubeView.moveRight()});
+            controller.addListener(Controller.events.LIFT,function(e){cubeView.moveUp()});
+            controller.addListener(Controller.events.DROP,function(e){cubeView.moveDown()});
+            controller.addListener(Controller.events.LEFT,function(e){cubeView.moveLeft()});
+            controller.addListener(Controller.events.RIGHT,function(e){cubeView.moveRight()});
 //            controller.addListener(Controller.events.PUSH,function(e){cubeView.movePush()});
 //            controller.addListener(Controller.events.PULL,function(e){cubeView.movePull()});
 //            controller.addListener(Controller.events.ROTATE_FWD,function(e){cubeView.rotateFwd()});
@@ -95,32 +98,20 @@ requirejs([
 //            controller.addListener(Controller.events.ROTATE_CCW,function(e){cubeView.rotateCCW()});
 //            controller.addListener(Controller.events.ROTATE_LEFT,function(e){cubeView.rotateLeft()});
 //            controller.addListener(Controller.events.ROTATE_RIGHT,function(e){cubeView.rotateRight()});
-//            controller.addListener(Controller.events.NEUTRAL,function(e){cubeView.center()});
+            controller.addListener(Controller.events.NEUTRAL,function(e){cubeView.center()});
 
-
-            var cubeView = this.cubeView = new CubeView();
-            cubeView.init();
-
-            var footerView = this.footerView = new FooterView();
-            footerView.init(controller);
-
-            var selectorView = this.selectorView = new SelectorView();
-            selectorView.init(controller);
-            selectorView.render();
-
-
-            controller.addListener(Controller.events.NEXTWORD,function(e){selectorView.wordOptions(e)});
+            controller.addListener(Controller.events.NEXTWORD,function(e){console.log('e',e), selectorView.wordOptions(e)});
             controller.addListener(Controller.events.LIFT,function(e){ selectorView.moveUp()});
             controller.addListener(Controller.events.DROP,function(e){ selectorView.moveDown()});
-            controller.addListener(Controller.events.LOOK_RIGHT,function(e){ selectorView.pick()});
+            controller.addListener(Controller.events.RIGHT,function(e){ selectorView.pick()});
             controller.addListener(Controller.events.MODE,function(e){ selectorView.onSetMode(e)});
 
             controller.addListener(Controller.events.WINK_LEFT,function(e){selectorView.nextMode()});
             controller.addListener(Controller.events.WINK_RIGHT,function(e){selectorView.prevMode()});
 
-            controller.addListener(Controller.events.LOOK_LEFT, function(e){footerView.remove()});
+            controller.addListener(Controller.events.LEFT, function(e){footerView.remove()});
             controller.addListener(Controller.events.SELECT,function(e){footerView.add(e)});
-            controller.addListener(Controller.events.ROTATE_RIGHT,function(e){ footerView.add(' ')});
+            controller.addListener(Controller.events.BLINK,function(e){ footerView.add(' ')});
 
             // defaults - yes and no
             controller.addListener(Controller.events.PUSH,function(e){controller.say('Yes')});
@@ -129,7 +120,6 @@ requirejs([
 
             $("#container").html(cubeView.render().el).show();
 
-            controller.nextWord('');
 
             // test harness
 //            var throttle = false;
