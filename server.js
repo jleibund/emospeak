@@ -6,7 +6,10 @@ var express = require('express')
     , io = require('socket.io').listen(app.listen(4000))
     , Controller = require('./lib/controller').Controller;
 
-var controller = new Controller({profile:'test', voice:'Ralph', rate:240});
+var powerThreshold = 0.45;
+var debounceTime = 500;
+
+var controller = new Controller({profile:'test', voice:'Ralph', rate:260, powerThreshold:powerThreshold});
 controller.init();
 
 app.configure(function () {
@@ -65,7 +68,7 @@ io.of('/events').on('connection',function(socket){
     _.each(Controller.events, function(event){
         var emit = function(data){socket.emit(event,data)};
         if (!~event.indexOf('/CONTROL')){
-            emit = _.debounce(emit,700,true);
+            emit = _.debounce(emit,debounceTime,true);
         }
 
         controller.addListener(event, emit);
