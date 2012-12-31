@@ -7,7 +7,7 @@ var express = require('express')
     , Controller = require('./lib/controller').Controller;
 
 var powerThreshold = 0.45;
-var debounceTime = 500;
+var debounceTime = 400;
 
 var controller = new Controller({profile:'test', voice:'Ralph', rate:260, powerThreshold:powerThreshold});
 controller.init();
@@ -66,7 +66,10 @@ app.get('/suggest', function(req, res, next){
 io.of('/events').on('connection',function(socket){
 
     _.each(Controller.events, function(event){
-        var emit = function(data){socket.emit(event,data)};
+        var emit = function(data){
+//            console.log('Emit: ',event);
+            socket.emit(event,data)
+        };
         if (!~event.indexOf('/CONTROL')){
             emit = _.debounce(emit,debounceTime,true);
         }

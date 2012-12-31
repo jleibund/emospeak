@@ -158,8 +158,10 @@ define([
             this.render();
         },
         setSelection: function(idx){
+            var choices = this.choices;
             if (!idx) idx = 0;
-            if (!this.choices || idx < 0 || idx > this.choices.length-1) return;
+            if (idx > choices.length-1) idx=0;
+            if (!choices || idx < 0) return;
 
             this.selected = idx;
             this.render();
