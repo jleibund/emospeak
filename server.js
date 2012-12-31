@@ -8,9 +8,9 @@ var express = require('express')
 
 var powerThreshold = 0.45;
 var debounceTime = 400;
+var profile = '/Users/jpleibundguth/Library/Application Support/Emotiv/Profiles/jleibund.emu';
 
-var controller = new Controller({profile:'test', voice:'Ralph', rate:260, powerThreshold:powerThreshold});
-controller.init();
+var controller = new Controller({voice:'Ralph', rate:260, powerThreshold:powerThreshold, profile:profile});
 
 app.configure(function () {
     app.use(express.bodyParser());
