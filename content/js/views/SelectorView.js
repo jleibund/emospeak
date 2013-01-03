@@ -131,7 +131,8 @@ define([
         setSelection: function(idx){
             var choices = this.choices;
             if (!idx) idx = 0;
-            if (choices && idx > choices.length-1) idx=0;
+          // don't rotate around
+          //  if (choices && idx > choices.length-1) idx=0;
             if (!choices || idx < 0) return;
 
             this.selected = idx;

@@ -7,7 +7,7 @@ var express = require('express')
     , Controller = require('./lib/controller').Controller;
 
 var powerThreshold = 0.45;
-var debounceTime = 400;
+var debounceTime = 900;
 var profile = '/Users/jpleibundguth/Library/Application Support/Emotiv/Profiles/jleibund.emu';
 
 var controller = new Controller({voice:'Ralph', rate:260, powerThreshold:powerThreshold, profile:profile});
@@ -70,8 +70,8 @@ io.of('/events').on('connection',function(socket){
 //            console.log('Emit: ',event);
             socket.emit(event,data)
         };
-        if (!~event.indexOf('/CONTROL')){
-            emit = _.debounce(emit,debounceTime,true);
+        if (!~event.indexOf('/CONTROL') && !~event.indexOf('/GYRO')){
+            emit = _.debounce(emit,debounceTime,false);
         }
 
         controller.addListener(event, emit);

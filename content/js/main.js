@@ -92,8 +92,10 @@ requirejs([
             controller.addListener(Controller.events.BLINK,function(e){cubeView.center()});
             controller.addListener(Controller.events.LIFT,function(e){cubeView.moveUp()});
             controller.addListener(Controller.events.DROP,function(e){cubeView.moveDown()});
-            controller.addListener(Controller.events.LEFT,function(e){cubeView.moveLeft()});
-            controller.addListener(Controller.events.RIGHT,function(e){cubeView.moveRight()});
+            controller.addListener(Controller.events.LOOK_LEFT,function(e){cubeView.moveLeft()});
+            controller.addListener(Controller.events.LOOK_RIGHT,function(e){cubeView.moveRight()});
+//            controller.addListener(Controller.events.LEFT,function(e){cubeView.moveLeft()});
+//            controller.addListener(Controller.events.RIGHT,function(e){cubeView.moveRight()});
             controller.addListener(Controller.events.PUSH,function(e){cubeView.movePush()});
             controller.addListener(Controller.events.PULL,function(e){cubeView.movePull()});
             controller.addListener(Controller.events.ROTATE_FWD,function(e){cubeView.rotateFwd()});
@@ -105,9 +107,10 @@ requirejs([
             controller.addListener(Controller.events.NEUTRAL,function(e){cubeView.center()});
 
             controller.addListener(Controller.events.NEXTWORD,function(e){wordView.wordOptions(e)});
-            controller.addListener(Controller.events.LIFT,function(e){ selectorMap[controller.getMode()].moveUp()});
-            controller.addListener(Controller.events.DROP,function(e){ selectorMap[controller.getMode()].moveDown()});
-            controller.addListener(Controller.events.PUSH,function(e){ selectorMap[controller.getMode()].pick()});
+//            controller.addListener(Controller.events.LIFT,function(e){ selectorMap[controller.getMode()].moveUp()});
+//            controller.addListener(Controller.events.DROP,function(e){ selectorMap[controller.getMode()].moveDown()});
+//            controller.addListener(Controller.events.PULL,function(e){ selectorMap[controller.getMode()].pick()});
+            controller.addListener(Controller.events.BLINK,function(e){ selectorMap[controller.getMode()].pick()});
 
 //            controller.addListener(Controller.events.MODE,function(e){ });
 
@@ -115,13 +118,23 @@ requirejs([
             controller.addListener(Controller.events.MODE,function(e){if (e.mode == 'words') footerView.nextWord()});
 //            controller.addListener(Controller.events.MODE,function(e){selectorMap[controller.getMode()].setSelection(0)})
             controller.addListener(Controller.events.MODE,function(e){_.each(_.values(selectorMap), function(view){view.setSelection(0)})});
-            controller.addListener(Controller.events.WINK_RIGHT,function(e){modeView.nextMode()});
-            controller.addListener(Controller.events.WINK_LEFT,function(e){modeView.prevMode()});
+//            controller.addListener(Controller.events.LOOK_RIGHT,function(e){modeView.nextMode()});
+//            controller.addListener(Controller.events.LOOK_LEFT,function(e){modeView.prevMode()});
 
-            controller.addListener(Controller.events.PULL, function(e){footerView.remove()});
+            controller.addListener(Controller.events.PUSH, function(e){footerView.remove()});
             controller.addListener(Controller.events.SELECT,function(e){footerView.add(e)});
 //            controller.addListener(Controller.events.LOOK_RIGHT,function(e){ footerView.add(' ')});
-            controller.addListener(Controller.events.BLINK,function(e){ footerView.say()});
+//            controller.addListener(Controller.events.BLINK,function(e){ footerView.say()});
+
+            var delta = 8;
+            controller.addListener(Controller.events.GYRO_DELTA,function(e){
+//                console.log('gyro',e)
+
+                if (e.x > delta) modeView.nextMode();
+                else if (e.x < -delta) modeView.prevMode();
+                if (e.y > delta) selectorMap[controller.getMode()].moveUp();
+                else if (e.y < -delta) selectorMap[controller.getMode()].moveDown();
+            });
 
             // what to do about clear, submitLine, etc?
 

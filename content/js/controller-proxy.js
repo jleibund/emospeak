@@ -13,21 +13,21 @@ define([
             this.connect = this.options && this.options.connect || 'http://localhost:4000/events';
             var socket = this.socket = io.connect(this.connect);
             var self = this;
-            this.lastEvent = Controller.events.NEUTRAL;
-            this.inTimeout = false;
-            this.timeout = this.options && this.options.timeout || 1000;
+//            this.lastEvent = Controller.events.NEUTRAL;
+//            this.inTimeout = false;
+//            this.timeout = this.options && this.options.timeout || 1000;
             _.each(Controller.events, function(event){
 
                 var emit = function(data){
                    // console.log('socket',event, data);
-                    var doubles = Controller.doubles[event];
-                    if (!doubles || doubles && !self.inTimeout && self.lastEvent != event){
+//                    var doubles = Controller.doubles[event];
+//                    if (!doubles || doubles && !self.inTimeout && self.lastEvent != event){
                         self.ee.emit(event,data);
-                        self.inTimeout = true;
-                        setTimeout(function(){self.inTimeout = false;},self.timeout);
-                    }
+//                        self.inTimeout = true;
+//                        setTimeout(function(){self.inTimeout = false;},self.timeout);
+//                    }
 
-                    self.lastEvent = event;
+//                    self.lastEvent = event;
                 };
 
 
@@ -95,10 +95,13 @@ define([
     Controller.events.SELECT = '/CONTROL/SELECT';
     Controller.events.MODE = '/CONTROL/MODE';
     Controller.events.SUGGEST = '/CONTROL/SUGGEST';
+    Controller.events.GYRO_DELTA = '/GYRO/DELTA';
 
-    Controller.doubles = [Controller.events.BLINK, Controller.events.LOOK_LEFT,
-        Controller.events.LOOK_RIGHT, Controller.events.WINK_LEFT, Controller.events.WINK_RIGHT,
-        Controller.events.LIFT, Controller.events.DROP, Controller.events.NEUTRAL];
+    Controller.doubles = [Controller.events.BLINK, Controller.events.NEUTRAL];
+
+//    Controller.doubles = [Controller.events.BLINK, Controller.events.LOOK_LEFT,
+//        Controller.events.LOOK_RIGHT, Controller.events.WINK_LEFT, Controller.events.WINK_RIGHT,
+//        Controller.events.LIFT, Controller.events.DROP, Controller.events.NEUTRAL];
 
     return Controller;
 
