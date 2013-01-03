@@ -19,37 +19,91 @@
         <script data-main="js/main" src="js/libs/require/require.min.js"></script>
 	</head>
 	<body>
-
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span3 well">
-                <div id="container" class="container">Loading...</div>
-            </div>
-            <div class="span9 well">
-                <div id="selector">
-
-                    <div class="btn-group">
-                        <button id="word" class="btn btn-mini btn-primary">Word</button>
-                        <button id="c1" class="btn btn-mini">C1</button>
-                        <button id="vowels" class="btn btn-mini">V</button>
-                        <button id="c2" class="btn btn-mini">C2</button>
-                        <button id="c3" class="btn btn-mini">C3</button>
-                        <button id="actions" class="btn btn-mini">Go</button>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <!--<div class="container">-->
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class="">
+                                <a href="./index.html">Emospeak</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="scroll-menu">
-                        <table class="table">
-                        </table>
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="container container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    <div id="container" class="container">Loading...</div>
+                </div>
+                <div class="span10">
+                    <div class="span2" id="selector">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">words</li>
+                        </ul>
+                        <div class="scroll-menu">
+                            <ul class="nav nav-list words">
+                                <li><a href="#">Loading...</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="span1">
+                        <ul class="nav nav-list c1">
+                            <li class="nav-header active">c1</li>
+                            <li><a href="#">Loading...</a></li>
+                        </ul>
+                    </div>
+                    <div class="span1">
+                        <ul class="nav nav-list vowels">
+                            <li class="nav-header active">vowels</li>
+                            <li><a href="#">Loading...</a></li>
+                        </ul>
+                    </div>
+                    <div class="span1">
+                        <ul class="nav nav-list c2">
+                            <li class="nav-header active">c2</li>
+                            <li><a href="#">Loading...</a></li>
+                        </ul>
+                    </div>
+                    <div class="span1">
+                        <ul class="nav nav-list c3">
+                            <li class="nav-header active">c3</li>
+                            <li><a href="#">Loading...</a></li>
+                        </ul>
+                    </div>
+                    <div class="span1">
+                        <ul class="nav nav-list symbols">
+                            <li class="nav-header active">symbols</li>
+                            <li><a href="#">Loading...</a></li>
+                        </ul>
+                    </div>
+                    <div class="span2">
+                        <ul class="nav nav-list actions">
+                            <li class="nav-header active">actions</li>
+                            <li><a href="#">Loading...</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row-fluid">
-            <div class=" footer well">
-                <input id="output" name="output" class="input-mysize"></input>
-                <button id="submit" class="btn btn-mini btn-primary" type="button">+</button>
+            <div class="row-fluid" style="padding-top: 20px">
+                <div class="btn-group span12">
+                    <button id="words" class="btn btn-mini">Words</button>
+                    <button id="c1" class="btn btn-mini">Consonants-1</button>
+                    <button id="vowels" class="btn btn-mini">Vowels</button>
+                    <button id="c2" class="btn btn-mini">Consonants-2</button>
+                    <button id="c3" class="btn btn-mini">Consonants-3</button>
+                    <button id="symbols" class="btn btn-mini">Symbols</button>
+                    <button id="actions" class="btn btn-mini">Actions</button>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="well span11">
+                    <input id="output" name="output" class="input-mysize"></input>
+                    <button id="submit" class="btn btn-mini btn-primary" type="button">+</button>
+                </div>
             </div>
         </div>
-    </div>
 
         <script src="js/libs/jquery/jquery.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>

@@ -191,6 +191,11 @@ define([
 
             var document = this.$el;
             var width = document.width(), height = document.height();
+            var offsetTop = document[0].offsetTop;
+            var offsetLeft = document[0].offsetLeft;
+
+            this.stats.domElement.style.top = offsetTop+10+'px';
+            this.stats.domElement.style.left = offsetLeft+40+'px';
 
             this.windowHalfX = width / 2;
             this.windowHalfY = height / 2;
@@ -198,7 +203,7 @@ define([
             this.camera.aspect = width / height;
             this.camera.updateProjectionMatrix();
 
-            console.log('resize',width,' ', height);
+            console.log('resize',width,' ', height, 'top', offsetTop, 'left', offsetLeft);
 
             this.renderer.setSize( width, height );
         }

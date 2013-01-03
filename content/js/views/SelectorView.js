@@ -8,11 +8,12 @@ define([
 //    var Controller = require('./lib/controller').Controller;
 
     var symbols = {
-        1:':',
-        2:'/',
-        3:'@',
-        4:'http://',
-        5:'https://'
+        1:'SPACE',
+        2:':',
+        3:'/',
+        4:'@',
+        5:'http://',
+        6:'https://'
     };
 
     var actions = {
@@ -53,28 +54,23 @@ define([
         u:2.758
     };
 
-
     var SelectorView = Backbone.View.extend({
         loaded:false,
         render:function(){
 
-
-            this.choices = [];
-            var mode = this.controller.getMode();
-            this.choices = this[mode];
-
-            if (!mode) this.controller.setMode('word');
-
-            var str = '', idx = 0;
-//            var select = '<i class="icon-arrow-right">';
-            var select = '*';
+            this.choices = this[this.mode];
+            var str = (this.mode =='words')? '': '<li class="nav-header">'+this.mode+'</li>', idx = 0;
             var self = this;
-
-            console.log('select:',this.selected, 'choices', this.choices);
+            if (this.mode == this.controller.getMode())
+                console.log('select:',this.selected, 'choices', this.choices);
 
             _.each(this.choices, function(item){
-                var sel = (idx == self.selected)? select : '&nbsp;';
-                str += '<tr wordid="'+idx+'" word="'+item+'"><td>'+sel+'</td><td>'+item+'</td></tr>';
+//                var sel = (idx == self.selected)? select : '&nbsp;';
+//                str += '<tr wordid="'+idx+'" word="'+item+'"><td>'+sel+'</td><td>'+item+'</td></tr>';
+                var sel = (idx == self.selected  && self.controller.getMode() == self.mode)? 'class="active"' : '';
+//                str += '<tr wordid="'+idx+'" word="'+item+'" '+sel+'><td>'+item+'</td></tr>';
+//                str += '<li '+sel+' wordid="'+idx+'" word="'+item+'">'+item+'</li>';
+                str += '<li wordid="'+idx+'" word="'+item+'" '+sel+'><a href="#">'+item+'</a></li>';
                 idx++;
             });
 
@@ -83,20 +79,25 @@ define([
             return this;
         },
         initialize: function(){
-            console.log('initialize',this.options);
-            this.table = $('.table');
+
+     //       this.listenTo(this.model, "change", this.render);
+
+//            var id = this.options && this.options.element || 'table';
+            this.mode = this.options && this.options.mode || 'words';
+            this.table = $('.'+this.mode);
+            console.log('table',this.table, 'mode', this.mode)
             this.selected = 0;
-            this.items = [];
             this.controller = this.options.controller;
             this.c1=[];
             this.c2=[];
             this.c3=[];
             this.actions = actions;
+            this.symbols = symbols;
 
             _.each(_.keys(letters),function(l){
                 var prob = letters[l];
                 if (prob >3) this.c1.push(l);
-                else if (prob >1) this.c2.push(l);
+                else if (prob >1.5) this.c2.push(l);
                 else this.c3.push(l);
             },this);
 
@@ -109,40 +110,8 @@ define([
             this.c3 = this.c3.sort(sortLetters);
 
             this.vowels = _.keys(vowels).sort(sortLetters);
-
-            // setup mode button clicks
-            var self = this;
-            this.modeOrder = [];
-            $('.btn-group > .btn-mini').each(function(){
-                var id = $(this).attr('id');
-                $(this).click(function(){
-                    self.controller.setMode(id);
-                });
-                self.modeOrder.push(id);
-            });
-
-        },
-        onSetMode:function(e){
-            if (e.old) $('#'+ e.old).removeClass('btn-primary');
-            $('#'+ e.mode).addClass('btn-primary');
-            if (!this.choices){
-                this.controller.nextWord('');
-            }
-            this.selected = 0;
-            this.render();
-        },
-        nextMode:function(){
-            var cur = this.controller.getMode();
-            var idx = _.indexOf(this.modeOrder, cur);
-            if (idx < this.modeOrder.length-1) this.controller.setMode(this.modeOrder[idx+1]);
-        },
-        prevMode:function(){
-            var cur = this.controller.getMode();
-            var idx = _.indexOf(this.modeOrder, cur);
-            if (idx > 0) this.controller.setMode(this.modeOrder[idx-1]);
         },
         wordOptions:function(options){
-            console.log('wordOptions',options)
             var items = [];
             var mode = this.controller.getMode();
             if (options){
@@ -153,14 +122,16 @@ define([
                     }
                 });
             }
-            this.word = items;
-            if (mode =='word') this.selected = 0;
-            this.render();
+            this.words = items;
+   //         if (this.mode == mode){
+                this.selected = 0;
+                this.render();
+   //         }
         },
         setSelection: function(idx){
             var choices = this.choices;
             if (!idx) idx = 0;
-            if (idx > choices.length-1) idx=0;
+            if (choices && idx > choices.length-1) idx=0;
             if (!choices || idx < 0) return;
 
             this.selected = idx;
@@ -173,8 +144,15 @@ define([
             this.setSelection(this.selected+1);
         },
         pick: function(){
-            if (this.choices && this.choices.length > this.selected)
-                this.controller.emit(Controller.events.SELECT,this.choices[this.selected]);
+            if (this.choices && this.choices.length > this.selected){
+                var sel = this.choices[this.selected];
+
+                // some exceptions..
+                // replace space
+                if (this.mode == 'symbols' && this.selected == 0) sel = ' ';
+
+                this.controller.emit(Controller.events.SELECT,sel);
+            }
         }
     });
 

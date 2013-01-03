@@ -51,7 +51,7 @@ define([
             console.log('add',text);
             if (text && text != ''){
                 var mode = this.controller.getMode();
-                var space = (mode =='word')? ' ':'';
+                var space = (mode =='words')? ' ':'';
                 var val = output.val()+space+text;
                 output.val(val);
                 this.words = val.split(' ');
@@ -61,12 +61,16 @@ define([
                 this.controller.nextWord(val);
             }
         },
+        nextWord: function(){
+            var output = $('#output');
+            this.controller.nextWord(output.val());
+        },
         remove: function(){
             // need to replace with something better and/or use unigram parsing here.
             var mode = this.controller.getMode();
             var output = $('#output');
             console.log('remove');
-            if (mode == 'word' && this.words.length>0){
+            if (mode == 'words' && this.words.length>0){
                 this.words.pop();
                 var val = this.words.join(' ');
                 output.val(val);
