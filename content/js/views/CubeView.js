@@ -194,8 +194,8 @@ define([
             var offsetTop = document[0].offsetTop;
             var offsetLeft = document[0].offsetLeft;
 
-            this.stats.domElement.style.top = offsetTop+10+'px';
-            this.stats.domElement.style.left = offsetLeft+40+'px';
+            this.stats.domElement.style.top = offsetTop+2+'px';
+            this.stats.domElement.style.left = offsetLeft+2+'px';
 
             this.windowHalfX = width / 2;
             this.windowHalfY = height / 2;

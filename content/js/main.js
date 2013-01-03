@@ -120,7 +120,7 @@ requirejs([
 
             controller.addListener(Controller.events.PULL, function(e){footerView.remove()});
             controller.addListener(Controller.events.SELECT,function(e){footerView.add(e)});
-            controller.addListener(Controller.events.LOOK_RIGHT,function(e){ footerView.add(' ')});
+//            controller.addListener(Controller.events.LOOK_RIGHT,function(e){ footerView.add(' ')});
             controller.addListener(Controller.events.BLINK,function(e){ footerView.say()});
 
             // what to do about clear, submitLine, etc?
