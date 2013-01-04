@@ -24,6 +24,8 @@ define([
                 var val = output.val();
                 if (self.val != val){
                     self.controller.nextWord(val);
+                    var last = val.split(' ');
+                    self.controller.suggest(last && last[last.length-1]);
                     self.val = val;
                     self.words = val.split(' ');
                 }
@@ -58,21 +60,26 @@ define([
             // need to replace with something better and/or use unigram parsing here.
             var output = this.output;
             console.log('add',text);
+            var mode = this.controller.getMode();
             if (text && text != ''){
-                var mode = this.controller.getMode();
-                var space = (mode =='words')? ' ':'';
+                var space = (mode =='words' || mode == 'suggested')? ' ':'';
                 var val = output.val()+space+text;
+                var suggested = (mode == 'suggested');
+                if (suggested){
+                    this.words.pop();
+                    val = this.words.join(' ')+' '+text;
+                }
                 output.val(val);
                 this.words = val.split(' ');
-
                 console.log('words',this.words);
-
-                this.controller.nextWord(val);
+                this.nextWord();
             }
+            this.prevMode = mode;
         },
         nextWord: function(){
             var output = $('#output');
             this.controller.nextWord(output.val());
+            this.controller.suggest(this.words && this.words[this.words.length-1]);
         },
         remove: function(){
             // need to replace with something better and/or use unigram parsing here.
@@ -83,7 +90,8 @@ define([
                 this.words.pop();
                 var val = this.words.join(' ');
                 output.val(val);
-                this.controller.nextWord(val);
+//                this.nextWord();
+//                this.controller.nextWord(val);
             } else {
                 output.val(output.val().substring(0,output.val().length-1));
             }

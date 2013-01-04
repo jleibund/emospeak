@@ -78,13 +78,14 @@ requirejs([
         //    var conn = mongoose.createConnection("mongodb://localhost/emospeak");
             var controller = this.controller = new Controller();
             var wordView  = new SelectorView({controller:controller, mode:'words', el:$('.words')});
+            var suggestView  = new SelectorView({controller:controller, mode:'suggested', el:$('.suggested')});
             var vowelView = new SelectorView({controller:controller, mode:'vowels', el:$('.vowels')});
             var c1View = new SelectorView({controller:controller, mode:'c1', el:$('.c1')});
             var c2View = new SelectorView({controller:controller, mode:'c2', el:$('.c2')});
             var c3View = new SelectorView({controller:controller, mode:'c3', el:$('.c3')});
             var symbolView = new SelectorView({controller:controller, mode:'symbols', el:$('.symbols')});
             var actionView = new SelectorView({controller:controller, mode:'actions', el:$('.actions')});
-            var selectorMap = this.selectorMap = {words:wordView, vowels:vowelView, c1:c1View, c2:c2View, c3:c3View, symbols:symbolView, actions:actionView};
+            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView, vowels:vowelView, c1:c1View, c2:c2View, c3:c3View, symbols:symbolView, actions:actionView};
 
             var cubeView = this.cubeView = new CubeView({controller:controller});
             var footerView = this.footerView = new FooterView({controller:controller});
@@ -108,6 +109,7 @@ requirejs([
             controller.addListener(Controller.events.NEUTRAL,function(e){cubeView.center()});
 
             controller.addListener(Controller.events.NEXTWORD,function(e){wordView.wordOptions(e)});
+            controller.addListener(Controller.events.SUGGEST,function(e){suggestView.wordOptions(e)});
 //            controller.addListener(Controller.events.LIFT,function(e){ selectorMap[controller.getMode()].moveUp()});
 //            controller.addListener(Controller.events.DROP,function(e){ selectorMap[controller.getMode()].moveDown()});
 //            controller.addListener(Controller.events.PULL,function(e){ selectorMap[controller.getMode()].pick()});

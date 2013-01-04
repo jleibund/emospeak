@@ -35,6 +35,7 @@ define([
             })
             socket.on('connect', function () {
                 self.nextWord('');
+                self.suggest('');
             });
 //            socket.on('disconnect', function () {
 //            });

@@ -50,10 +50,12 @@ app.get('/submitLine', function(req, res, next){
 
 app.get('/suggest', function(req, res, next){
     var term = req.query.term;
-    res.send({
-        status:0,
-        payload:controller.suggest(term)
-    });
+    controller.suggest(term, function(data){
+        res.send({
+            status:0,
+            payload:data
+        });
+    })
 });
 
 

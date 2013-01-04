@@ -84,7 +84,7 @@ define([
         render:function(){
 
             this.choices = this[this.mode];
-            var str = (this.mode =='words')? '': '<li class="nav-header">'+this.mode+'</li>';
+            var str = (this.mode =='words' || this.mode == 'suggested')? '': '<li class="nav-header">'+this.mode+'</li>';
             var self = this;
 //            if (this.mode == this.controller.getMode())
 //                console.log('select:',this.selected, 'choices', this.choices);
@@ -100,13 +100,13 @@ define([
             this.delegateEvents();
 
             // setup the copy action
-            if (this.mode =='actions'){
-                $('ul.actions').find('li[wordid="3"]').find('a.choice').zclip({
-                    path:'js/libs/zclip/ZeroClipboard.swf',
-                    setCSSEffects:false,
-                    copy:function(){return $('input#output').val();}
-                });
-            }
+//            if (this.mode =='actions'){
+//                $('ul.actions').find('li[wordid="3"]').find('a.choice').zclip({
+//                    path:'js/libs/zclip/ZeroClipboard.swf',
+//                    setCSSEffects:false,
+//                    copy:function(){return $('input#output').val();}
+//                });
+//            }
 
             return this;
         },
@@ -149,11 +149,12 @@ define([
                     }
                 });
             }
-            this.words = items;
-   //         if (this.mode == mode){
-                this.selected = 0;
-                this.render();
-   //         }
+            if (this.mode == 'words')
+                this.words = items;
+            if (this.mode == 'suggested')
+                this.suggested = items;
+            this.selected = 0;
+            this.render();
         },
         setSelection: function(idx){
             var choices = this.choices;
