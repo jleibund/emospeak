@@ -74,15 +74,16 @@ requirejs([
         },
         main: function(){
 
+
         //    var conn = mongoose.createConnection("mongodb://localhost/emospeak");
             var controller = this.controller = new Controller();
-            var wordView  = new SelectorView({controller:controller, mode:'words'});
-            var vowelView = new SelectorView({controller:controller, mode:'vowels'});
-            var c1View = new SelectorView({controller:controller, mode:'c1'});
-            var c2View = new SelectorView({controller:controller, mode:'c2'});
-            var c3View = new SelectorView({controller:controller, mode:'c3'});
-            var symbolView = new SelectorView({controller:controller, mode:'symbols'});
-            var actionView = new SelectorView({controller:controller, mode:'actions'});
+            var wordView  = new SelectorView({controller:controller, mode:'words', el:$('.words')});
+            var vowelView = new SelectorView({controller:controller, mode:'vowels', el:$('.vowels')});
+            var c1View = new SelectorView({controller:controller, mode:'c1', el:$('.c1')});
+            var c2View = new SelectorView({controller:controller, mode:'c2', el:$('.c2')});
+            var c3View = new SelectorView({controller:controller, mode:'c3', el:$('.c3')});
+            var symbolView = new SelectorView({controller:controller, mode:'symbols', el:$('.symbols')});
+            var actionView = new SelectorView({controller:controller, mode:'actions', el:$('.actions')});
             var selectorMap = this.selectorMap = {words:wordView, vowels:vowelView, c1:c1View, c2:c2View, c3:c3View, symbols:symbolView, actions:actionView};
 
             var cubeView = this.cubeView = new CubeView({controller:controller});
@@ -121,8 +122,17 @@ requirejs([
 //            controller.addListener(Controller.events.LOOK_RIGHT,function(e){modeView.nextMode()});
 //            controller.addListener(Controller.events.LOOK_LEFT,function(e){modeView.prevMode()});
 
-            controller.addListener(Controller.events.PUSH, function(e){footerView.remove()});
+            controller.addListener(Controller.events.PUSH, function(e){footerView.remove(); });
             controller.addListener(Controller.events.SELECT,function(e){footerView.add(e)});
+
+//            controller.addListener(Controller.events.COPY, function(e){ footerView.copy(); })
+            controller.addListener(Controller.events.CLEAR, function(e){ footerView.clear();  })
+            controller.addListener(Controller.events.URL, function(e){ footerView.url(); })
+            controller.addListener(Controller.events.SEARCH, function(e) { footerView.search() });
+            controller.addListener(Controller.events.BACKSPACE, function(e){ footerView.remove();  })
+            controller.addListener(Controller.events.SUBMIT, function(e){ footerView.submit(); footerView.say(); footerView.clear(); })
+            controller.addListener(Controller.events.SAY, function(e){ footerView.say();  })
+
 //            controller.addListener(Controller.events.LOOK_RIGHT,function(e){ footerView.add(' ')});
 //            controller.addListener(Controller.events.BLINK,function(e){ footerView.say()});
 

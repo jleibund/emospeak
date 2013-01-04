@@ -5,22 +5,35 @@ define([
     'controller-proxy'
 ], function($, _, Backbone, Controller){
 
-//    var Controller = require('./lib/controller').Controller;
-
     var symbols = {
-        1:'SPACE',
-        2:':',
-        3:'/',
-        4:'@',
-        5:'http://',
+        0:'SPACE',
+        1:'http://',
+        2:'.',
+        3:':',
+        4:'/',
+        5:'@',
         6:'https://'
     };
 
     var actions = {
-        1:'Submit',
-        2:'Copy',
-        3:'Repeat'
+        0:'Submit',
+        1:'Backspace',
+        2:'Clear',
+        3:'Copy',
+        4:'Say',
+        5:'Go (URL)',
+        6:'Search'
     };
+
+    var actionMap = {
+        0: Controller.events.SUBMIT,
+        1: Controller.events.BACKSPACE,
+        2: Controller.events.CLEAR,
+        3: Controller.events.COPY,
+        4: Controller.events.SAY,
+        5: Controller.events.URL,
+        6: Controller.events.SEARCH
+    }
 
     var letters = {
         b:1.492,
@@ -56,36 +69,50 @@ define([
 
     var SelectorView = Backbone.View.extend({
         loaded:false,
+        tagName:'ul',
+        events:{
+            'click a.choice':'onClick'
+        },
+        onClick:function(e){
+            e.preventDefault();
+            if (this.mode != 'actions')
+                this.controller.setMode(this.mode);
+            var wordid = $(e.currentTarget).parent().attr('wordid')
+            this.setSelection(wordid);
+            this.pick();
+        },
         render:function(){
 
             this.choices = this[this.mode];
-            var str = (this.mode =='words')? '': '<li class="nav-header">'+this.mode+'</li>', idx = 0;
+            var str = (this.mode =='words')? '': '<li class="nav-header">'+this.mode+'</li>';
             var self = this;
-            if (this.mode == this.controller.getMode())
-                console.log('select:',this.selected, 'choices', this.choices);
+//            if (this.mode == this.controller.getMode())
+//                console.log('select:',this.selected, 'choices', this.choices);
 
+            var idx = 0;
             _.each(this.choices, function(item){
-//                var sel = (idx == self.selected)? select : '&nbsp;';
-//                str += '<tr wordid="'+idx+'" word="'+item+'"><td>'+sel+'</td><td>'+item+'</td></tr>';
                 var sel = (idx == self.selected  && self.controller.getMode() == self.mode)? 'class="active"' : '';
-//                str += '<tr wordid="'+idx+'" word="'+item+'" '+sel+'><td>'+item+'</td></tr>';
-//                str += '<li '+sel+' wordid="'+idx+'" word="'+item+'">'+item+'</li>';
-                str += '<li wordid="'+idx+'" word="'+item+'" '+sel+'><a href="#">'+item+'</a></li>';
+                str += '<li wordid="'+idx+'" word="'+item+'" '+sel+'><a class="choice">'+item+'</a></li>';
                 idx++;
             });
 
-            this.table.empty().append($(str));
+            this.$el.empty().append($(str));
+            this.delegateEvents();
+
+            // setup the copy action
+            if (this.mode =='actions'){
+                $('ul.actions').find('li[wordid="3"]').find('a.choice').zclip({
+                    path:'js/libs/zclip/ZeroClipboard.swf',
+                    setCSSEffects:false,
+                    copy:function(){return $('input#output').val();}
+                });
+            }
 
             return this;
         },
         initialize: function(){
+            this.mode = this.options && this.options.mode;
 
-     //       this.listenTo(this.model, "change", this.render);
-
-//            var id = this.options && this.options.element || 'table';
-            this.mode = this.options && this.options.mode || 'words';
-            this.table = $('.'+this.mode);
-            console.log('table',this.table, 'mode', this.mode)
             this.selected = 0;
             this.controller = this.options.controller;
             this.c1=[];
@@ -145,14 +172,21 @@ define([
             this.setSelection(this.selected+1);
         },
         pick: function(){
-            if (this.choices && this.choices.length > this.selected){
+            if (this.choices && _.size(this.choices) > this.selected){
                 var sel = this.choices[this.selected];
+
 
                 // some exceptions..
                 // replace space
                 if (this.mode == 'symbols' && this.selected == 0) sel = ' ';
 
-                this.controller.emit(Controller.events.SELECT,sel);
+
+                if (this.mode != 'actions'){
+                    this.controller.emit(Controller.events.SELECT,sel);
+                } else {
+                    console.log('action', actionMap[this.selected]);
+                    this.controller.emit(actionMap[this.selected]);
+                }
             }
         }
     });

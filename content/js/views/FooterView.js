@@ -41,13 +41,22 @@ define([
         },
         clear: function(){
             this.output.val('');
+            this.nextWord('')
+        },
+        url: function(){
+            window.open(this.output.val(), '_blank');
+            window.focus();
+        },
+        search: function(){
+            window.open('http://www.google.com/search?q='+this.output.val(),'_blank');
+            window.focus();
         },
         say: function(){
             this.controller.say(this.output.val());
         },
         add: function(text){
             // need to replace with something better and/or use unigram parsing here.
-            var output = $('#output');
+            var output = this.output;
             console.log('add',text);
             if (text && text != ''){
                 var mode = this.controller.getMode();
@@ -78,6 +87,7 @@ define([
             } else {
                 output.val(output.val().substring(0,output.val().length-1));
             }
+            this.nextWord();
         }
     });
 

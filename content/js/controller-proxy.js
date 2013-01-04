@@ -89,8 +89,13 @@ define([
     Controller.events.SMILE = '/EXP/SMILE';
     Controller.events.LAUGH = '/EXP/LAUGH';
     Controller.events.FURROW = '/EXP/FURROW';
-    Controller.events.SUBMIT_LINE = '/CONTROL/SUBMIT';
+    Controller.events.COPY = '/CONTROL/COPY';
+    Controller.events.CLEAR = '/CONTROL/CLEAR';
+    Controller.events.URL = '/CONTROL/URL';
+    Controller.events.BACKSPACE = '/CONTROL/BACKSPACE';
+    Controller.events.SUBMIT = '/CONTROL/SUBMIT';
     Controller.events.SAY = '/CONTROL/SAY';
+    Controller.events.SEARCH = '/CONTROL/SEARCH';
     Controller.events.NEXTWORD = '/CONTROL/NEXTWORD';
     Controller.events.SELECT = '/CONTROL/SELECT';
     Controller.events.MODE = '/CONTROL/MODE';
