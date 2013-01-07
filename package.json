@@ -16,6 +16,7 @@
         , "wordpos" : "latest"
         , "spell": "latest"
         , "requirejs" :"latest"
+        , "amdefine" : "latest"
         , "jsonreq" : "latest"
         , "underscore" : "latest"
         , "jam" : "latest"

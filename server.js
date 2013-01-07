@@ -4,7 +4,8 @@ var express = require('express')
     , _ = require('underscore')
     , server = http.createServer(app)
     , io = require('socket.io').listen(app.listen(4000))
-    , Controller = require('./lib/controller').Controller;
+    , Controller = require('./lib/controller').Controller
+    , EventType = require('./shared/event-type');
 
 var powerThreshold = 0.45;
 var debounceTime = 900;
@@ -18,6 +19,7 @@ app.configure(function () {
     app.use(express.cookieParser());
     app.use(app.router);
     app.use(express.static(__dirname + '/content'));
+    app.use(express.static(__dirname + '/shared'));
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
@@ -67,7 +69,7 @@ app.get('/suggest', function(req, res, next){
 
 io.of('/events').on('connection',function(socket){
 
-    _.each(Controller.events, function(event){
+    _.each(EventType, function(event){
         var emit = function(data){
 //            console.log('Emit: ',event);
             socket.emit(event,data)

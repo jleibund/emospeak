@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'socket.io',
-    'events'
-], function($, _, Backbone, io, events){
+    'events',
+    'event-type'
+], function($, _, Backbone, io, events, EventType){
 
     var Controller = Backbone.Model.extend({
         listeners: {},
@@ -16,7 +17,9 @@ define([
 //            this.lastEvent = Controller.events.NEUTRAL;
 //            this.inTimeout = false;
 //            this.timeout = this.options && this.options.timeout || 1000;
-            _.each(Controller.events, function(event){
+
+//                    _.each(Controller.events, function(event){
+            _.each(EventType, function(event){
 
                 var emit = function(data){
                    // console.log('socket',event, data);
@@ -61,49 +64,12 @@ define([
         setMode: function(mode){
             var oldMode = this.mode;
             this.mode = mode;
-            this.ee.emit(Controller.events.MODE,{old:oldMode, mode:mode});
+            this.ee.emit(EventType.MODE,{old:oldMode, mode:mode});
+//            this.ee.emit(Controller.events.MODE,{old:oldMode, mode:mode});
         }
     });
-    Controller.events = {};
-    Controller.events.NEUTRAL = '/COG/NEUTRAL';
-    Controller.events.PUSH = '/COG/PUSH';
-    Controller.events.PULL = '/COG/PULL';
-    Controller.events.DROP = '/COG/DROP';
-    Controller.events.LIFT = '/COG/LIFT';
-    Controller.events.LEFT = '/COG/LEFT';
-    Controller.events.RIGHT = '/COG/RIGHT';
-    Controller.events.ROTATE_LEFT = '/COG/ROTATE_LEFT';
-    Controller.events.ROTATE_RIGHT = '/COG/ROTATE_RIGHT';
-    Controller.events.ROTATE_CW = '/COG/ROTATE_CLOCKWISE';
-    Controller.events.ROTATE_CCW = '/COG/ROTATE_COUNTER_CLOCKWISE';
-    Controller.events.ROTATE_FWD = '/COG/ROTATE_FORWARD';
-    Controller.events.ROTATE_BCK = '/COG/ROTATE_REVERSE';
-    Controller.events.DISAPPEAR = '/COG/DISAPPEAR';
-    Controller.events.BLINK = '/EXP/BLINK';
-    Controller.events.LOOK_LEFT = '/EXP/LOOK_LEFT';
-    Controller.events.LOOK_RIGHT = '/EXP/LOOK_RIGHT';
-    Controller.events.SMIRK_LEFT = '/EXP/SMIRK_LEFT';
-    Controller.events.SMIRK_RIGHT = '/EXP/SMIRK_RIGHT';
-    Controller.events.WINK_LEFT = '/EXP/WINK_LEFT';
-    Controller.events.WINK_RIGHT = '/EXP/WINK_RIGHT';
-    Controller.events.EYEBROW = '/EXP/EYEBROW';
-    Controller.events.SMILE = '/EXP/SMILE';
-    Controller.events.LAUGH = '/EXP/LAUGH';
-    Controller.events.FURROW = '/EXP/FURROW';
-    Controller.events.COPY = '/CONTROL/COPY';
-    Controller.events.CLEAR = '/CONTROL/CLEAR';
-    Controller.events.URL = '/CONTROL/URL';
-    Controller.events.BACKSPACE = '/CONTROL/BACKSPACE';
-    Controller.events.SUBMIT = '/CONTROL/SUBMIT';
-    Controller.events.SAY = '/CONTROL/SAY';
-    Controller.events.SEARCH = '/CONTROL/SEARCH';
-    Controller.events.NEXTWORD = '/CONTROL/NEXTWORD';
-    Controller.events.SELECT = '/CONTROL/SELECT';
-    Controller.events.MODE = '/CONTROL/MODE';
-    Controller.events.SUGGEST = '/CONTROL/SUGGEST';
-    Controller.events.GYRO_DELTA = '/GYRO/DELTA';
 
-    Controller.doubles = [Controller.events.BLINK, Controller.events.NEUTRAL];
+//    Controller.doubles = [Controller.events.BLINK, Controller.events.NEUTRAL];
 
 //    Controller.doubles = [Controller.events.BLINK, Controller.events.LOOK_LEFT,
 //        Controller.events.LOOK_RIGHT, Controller.events.WINK_LEFT, Controller.events.WINK_RIGHT,

@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'controller-proxy'
-], function($, _, Backbone, Controller){
+    'controller-proxy',
+    'event-type'
+], function($, _, Backbone, Controller, EventType){
 
     var symbols = {
         0:'SPACE',
@@ -26,13 +27,13 @@ define([
     };
 
     var actionMap = {
-        0: Controller.events.SUBMIT,
-        1: Controller.events.BACKSPACE,
-        2: Controller.events.CLEAR,
-        3: Controller.events.COPY,
-        4: Controller.events.SAY,
-        5: Controller.events.URL,
-        6: Controller.events.SEARCH
+        0: EventType.SUBMIT,
+        1: EventType.BACKSPACE,
+        2: EventType.CLEAR,
+        3: EventType.COPY,
+        4: EventType.SAY,
+        5: EventType.URL,
+        6: EventType.SEARCH
     }
 
     var letters = {
@@ -183,7 +184,7 @@ define([
 
 
                 if (this.mode != 'actions'){
-                    this.controller.emit(Controller.events.SELECT,sel);
+                    this.controller.emit(EventType.SELECT,sel);
                 } else {
                     console.log('action', actionMap[this.selected]);
                     this.controller.emit(actionMap[this.selected]);

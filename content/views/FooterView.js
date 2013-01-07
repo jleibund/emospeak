@@ -35,6 +35,7 @@ define([
             $('#submit').click(function(){
                 self.submit();
                 self.say();
+                self.clear();
             });
 
         },
