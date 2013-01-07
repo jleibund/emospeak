@@ -17,6 +17,7 @@
         , "spell": "latest"
         , "requirejs" :"latest"
         , "underscore" : "latest"
+        , "jam" : "latest"
         , "events" :"latest"
     },
     "jam": {
