@@ -1,3 +1,22 @@
+requirejs.config({
+    paths: {
+        three: 'shim/three/three.min',
+        stats: 'shim/three/stats.min'
+    },
+    shim: {
+        stats: {
+            exports:'Stats'
+        },
+        detector:{
+            exports:'Detector'
+        },
+        three:{
+            exports:'THREE'
+        }
+    }
+});
+
+
 define([
     'jquery',
     'underscore',

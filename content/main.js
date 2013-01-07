@@ -1,48 +1,48 @@
 
-requirejs.config({
-    paths: {
-        jquery: 'libs/jquery/jquery.min',
-        underscore: 'libs/underscore/underscore.min',
-        backbone: 'libs/backbone/backbone.min',
-        three: 'libs/three/three.min',
-        socket: 'libs/socket.io/socket.io',
-        eventemitter: 'libs/eventemitter/EventEmitter',
-        stats: 'libs/three/stats.min',
-        detector: 'libs/three/Detector',
-        templates: '../templates',
-        'backbone.localStorage': 'lib/backbone.localStorage'
-    },
-    shim: {
-        underscore: {
-            exports: '_'
-        },
-        backbone: {
-            deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
-        },
-        socket: {
-            exports: 'io'
-        },
-        eventemitter: {
-            exports: 'EventEmitter'
-        },
-        'backbone.localStorage': {
-            deps: ['backbone'],
-            exports: 'Backbone'
-        },
-        stats: {
-            exports:'Stats'
-        },
-        detector:{
-            exports:'Detector'
-        },
-        three:{
-            exports:'THREE'
-        }
-    }
-});
+//requirejs.config({
+//    paths: {
+//        jquery: 'libs/jquery/jquery.min',
+//        underscore: 'libs/underscore/underscore.min',
+//        backbone: 'libs/backbone/backbone.min',
+//        three: 'libs/three/three.min',
+//        socket: 'libs/socket.io/socket.io',
+//        eventemitter: 'libs/eventemitter/EventEmitter',
+//        stats: 'libs/three/stats.min',
+//        detector: 'libs/three/Detector',
+//        templates: '../templates',
+//        'backbone.localStorage': 'lib/backbone.localStorage'
+//    },
+//    shim: {
+//        underscore: {
+//            exports: '_'
+//        },
+//        backbone: {
+//            deps: ['underscore', 'jquery'],
+//            exports: 'Backbone'
+//        },
+//        socket: {
+//            exports: 'io'
+//        },
+//        eventemitter: {
+//            exports: 'EventEmitter'
+//        },
+//        'backbone.localStorage': {
+//            deps: ['backbone'],
+//            exports: 'Backbone'
+//        },
+//        stats: {
+//            exports:'Stats'
+//        },
+//        detector:{
+//            exports:'Detector'
+//        },
+//        three:{
+//            exports:'THREE'
+//        }
+//    }
+//});
 
-requirejs([
+define([
     'jquery',
     'underscore',
     'backbone',

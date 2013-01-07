@@ -2,14 +2,14 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'socket',
-    'eventemitter'
-], function($, _, Backbone, io, EventEmitter){
+    'socket.io',
+    'events'
+], function($, _, Backbone, io, events){
 
     var Controller = Backbone.Model.extend({
         listeners: {},
         initialize: function(){
-            this.ee = new EventEmitter();
+            this.ee = new events.EventEmitter();
             this.connect = this.options && this.options.connect || 'http://localhost:4000/events';
             var socket = this.socket = io.connect(this.connect);
             var self = this;
