@@ -92,9 +92,11 @@ define([
 
             var idx = 0;
             _.each(this.choices, function(item){
-                var sel = (idx == self.selected  && self.controller.getMode() == self.mode)? 'class="active"' : '';
-                str += '<li wordid="'+idx+'" word="'+item+'" '+sel+'><a class="choice">'+item+'</a></li>';
-                idx++;
+                if (item){
+                    var sel = (idx == self.selected  && self.controller.getMode() == self.mode)? 'class="active"' : '';
+                    str += '<li wordid="'+idx+'" word="'+item+'" '+sel+'><a class="choice">'+item+'</a></li>';
+                    idx++;
+                }
             });
 
             this.$el.empty().append($(str));

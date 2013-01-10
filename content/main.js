@@ -81,21 +81,14 @@ define([
             var controller = this.controller = new Controller();
             var wordView  = new SelectorView({controller:controller, mode:'words', el:$('.words')});
             var suggestView  = new SelectorView({controller:controller, mode:'suggested', el:$('.suggested')});
-//            var vowelView = new SelectorView({controller:controller, mode:'vowels', el:$('.vowels')});
-//            var c1View = new SelectorView({controller:controller, mode:'c1', el:$('.c1')});
-//            var c2View = new SelectorView({controller:controller, mode:'c2', el:$('.c2')});
-//            var c3View = new SelectorView({controller:controller, mode:'c3', el:$('.c3')});
-//            var symbolView = new SelectorView({controller:controller, mode:'symbols', el:$('.symbols')});
-            var actionView = new SelectorView({controller:controller, mode:'actions', el:$('.actions')});
-//            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView, vowels:vowelView, c1:c1View, c2:c2View, c3:c3View, symbols:symbolView, actions:actionView};
-            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView, actions:actionView};
+            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView};
 
-//            var cubeView = this.cubeView = new CubeView({controller:controller});
             var footerView = this.footerView = new FooterView({controller:controller, el:$('.readout')});
             var modeView = this.modeView = new ModeView({controller:controller});
             var keyboardView = this.keyboardView = new KeyboardView({controller:controller, el:$('.lt')});
 
             keyboardView.on(KeyboardView.SUBMIT,function(e){footerView.add(e)});
+            keyboardView.on(KeyboardView.CHANGE,function(e){controller.suggest(e)});
 
 //            controller.addListener(EventType.BLINK,function(e){cubeView.center()});
 //            controller.addListener(EventType.LIFT,function(e){cubeView.moveUp()});
@@ -132,6 +125,7 @@ define([
 
             controller.addListener(EventType.PUSH, function(e){footerView.remove(); });
             controller.addListener(EventType.SELECT,function(e){footerView.add(e)});
+            controller.addListener(EventType.SELECT,function(e){keyboardView.onClear(e)});
 
 //            controller.addListener(EventType.COPY, function(e){ footerView.copy(); })
             controller.addListener(EventType.CLEAR, function(e){ footerView.clear();  })

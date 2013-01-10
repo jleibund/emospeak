@@ -32,20 +32,31 @@
                 <!--</div>-->
             </div>
         </div>
-        <div class="container container-fluid" style="padding-top: 25px">
+        <div class="container container-fluid">
             <div class="row-fluid">
-                <!--<div class="span3">-->
-                    <!--<div id="container" class="container">Loading...</div>-->
-                <!--</div>-->
                 <div class="span12">
                     <div class="span2" id="selector">
                         <ul class="nav nav-list">
                             <li class="nav-header">words</li>
                         </ul>
-                        <div class="scroll-menu">
-                            <ul class="nav nav-list words">
-                                <li><a href="#">Loading...</a></li>
-                            </ul>
+                        <div class="well">
+                            <div class="scroll-menu">
+                                <ul class="nav nav-list words">
+                                    <li><a href="#">Loading...</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span2">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">suggested</li>
+                        </ul>
+                        <div class="well">
+                            <div class="scroll-menu">
+                                <ul class="nav nav-list suggested">
+                                    <li><a href="#">Loading...</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="lt span7">
@@ -56,49 +67,49 @@
                             <table class="lt-table">
                             </table>
                         </div>
-                        <div class="row-fluid" >
-                            <button  class="span2 btn pull-left lt-back">Back</button>
-                            <div class="span8 well well-small lt-output"></div>
-                           <button class="span2 btn lt-done pull-right">OK</button>
+                        <div class="row-fluid">
+                            <div class="input-prepend input-append">
+                                <span class="add-on btn-success"><i class="icon-ok icon-white lt-done"></i></span>
+                                <input class="span9 lt-output"></input>
+                                <span class="add-on btn-danger"><i class="icon-remove icon-white lt-clear"></i></span>
+                                <button class="btn lt-back pull-right">Backspace</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="span2">
-                        <ul class="nav nav-list">
-                            <li class="nav-header">suggested</li>
-                        </ul>
-                        <div class="scroll-menu">
-                            <ul class="nav nav-list suggested">
-                                <li><a href="#">Loading...</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="span1">
-                        <ul class="nav nav-list actions">
-                            <li class="nav-header active">actions</li>
-                            <li><a href="#">Loading...</a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
-            <!--<div class="row-fluid" style="padding-top: 10px" align="center">-->
-                <!--<div class="btn-group span11">-->
-                    <!--<button id="words" class="btn btn-mini">Words</button>-->
-                    <!--<button id="suggested" class="btn btn-mini">Suggested</button>-->
-                    <!--<button id="c1" class="btn btn-mini">Consonants-1</button>-->
-                    <!--<button id="vowels" class="btn btn-mini">Vowels</button>-->
-                    <!--<button id="c2" class="btn btn-mini">Consonants-2</button>-->
-                    <!--<button id="c3" class="btn btn-mini">Consonants-3</button>-->
-                    <!--<button id="symbols" class="btn btn-mini">Symbols</button>-->
-                    <!--<button id="actions" class="btn btn-mini">Actions</button>-->
-                <!--</div>-->
-            <!--</div>-->
 
-            <div class="row-fluid" style="padding-top: 25px">
-                <div class="well span12">
+            <ul class="nav nav-list">
+                <li class="nav-header">favorites</li>
+            </ul>
+            <div class="row-fluid" >
+                <div class="well span11">
+                    <button class="btn btn-small btn-info favorite" type="button"><strong>Peter</strong></button>
+                    <button class="btn btn-small btn-info favorite" type="button"><strong>Candy</strong></button>
+                    <button class="btn btn-small btn-info favorite" type="button"><strong>JP</strong></button>
+                    <button class="btn btn-small btn-info favorite" type="button"><strong>Chris</strong></button>
+
+                </div>
+            </div>
+            <ul class="nav nav-list">
+                <li class="nav-header">actions</li>
+            </ul>
+            <div class="row-fluid" >
+                <div class="well span11">
                     <ul class="pager readout">
                     </ul>
-                    <input id="output" name="output" class="input-mysize"></input>
-                    <button id="submit" class="btn btn-mini btn-primary" type="button">Submit</button>
+                    <div align="center">
+                        <div class="input-prepend input-append">
+                            <span class="add-on btn-success"><i class="icon-repeat icon-white say"></i></span>
+                            <input id="output" name="output" class="span8"></input>
+                            <span class="add-on btn-danger"><i class="icon-remove icon-white clear"></i></span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-small btn-success submit" type="button"><i class="icon-ok icon-white"></i> <strong>Submit</strong></button>
+                            <button class="btn btn-small btn-success go" type="button"><i class="icon-share-alt icon-white"></i> <strong>Go</strong></button>
+                            <button class="btn btn-small btn-success search" type="button"><i class="icon-search icon-white"></i> <strong>Search</strong></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

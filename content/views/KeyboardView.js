@@ -42,13 +42,13 @@ define([
         0:2,
         'http://':1,
         'https://':1,
-        '/':1,
-        '@':1,
-        '.':1,
-        ',':1,
-        '!':1,
-        '?':1,
-        '\"':1
+        '/':2,
+        '@':2,
+        '.':2,
+        ',':2,
+        '!':2,
+        '?':2,
+        '\"':2
     };
 
     var bgs = {
@@ -171,8 +171,8 @@ define([
     ];
 
     var choices = [
-        ['j','u','r','v','m','c','','1','2','3','','http://','https://','?'],
-        ['q','f','o','a','i','l','','4','5','6','','/','@','!'],
+        ['j','u','r','v','m','c','','1','2','3','','/','?','http://'],
+        ['q','f','o','a','i','l','','4','5','6','','@','!','https://'],
         ['y','s','t','h','n','k','','7','8','9','','.',',','\"'],
         ['x','w','g','e','d','','','','0','','',''],
         ['','','p','b','z','','']
@@ -190,6 +190,9 @@ define([
             'click .lt-clear' : 'onClear',
             'click .lt-back' : 'onBack'
         },
+        btnOff:'btn-inverse',
+        btnSuggest:'btn-success',
+        btnHighlight:'btn-primary',
         onClick: function(e){
             e.preventDefault();
 
@@ -198,7 +201,7 @@ define([
             out.data('data',out.data('data')+l);
 
             if (this.letters)
-                this.letters.removeClass('btn-info');
+                this.letters.removeClass(this.btnSuggest).addClass(this.btnOff);
 
             this.onBigrams(bgs,l);
             var self = this;
@@ -209,6 +212,7 @@ define([
                 }
             })
             this.onDictionary(words,l);
+            this.trigger(Keyboard.CHANGE,this.output.data('data'));
 
             this.render();
         },
@@ -217,17 +221,17 @@ define([
             _.each(data, function(w){
                 var idx = w.indexOf(l);
                 if (~idx && idx < w.length-1 && w[idx+1] != l){
-                    $('button[data-letter="'+w[idx+1]+'"]').addClass('btn-info');
+                    $('button[data-letter="'+w[idx+1]+'"]').removeClass(this.btnOff).addClass(this.btnSuggest);
                     found = true;
                 }
-            })
+            },this)
             return found;
         },
         onLetters: function(data,l){
             var found = false;
             _.each(data, function(letter){
-                    $('button[data-letter="'+letter+'"]').addClass('btn-info');
-            })
+                    $('button[data-letter="'+letter+'"]').removeClass(this.btnOff).addClass(this.btnSuggest);
+            },this)
             return found;
         },
         onBigrams: function(data,l){
@@ -236,21 +240,21 @@ define([
                 if (!bg.indexOf(l)){
                     // highlight the other letter
                     var o = bg[1];
-                    $('button[data-letter="'+o+'"]').addClass('btn-info');
+                    $('button[data-letter="'+o+'"]').removeClass(this.btnOff).addClass(this.btnSuggest);
                 }
-            });
+            },this);
             return found;
         },
         onDone: function(){
             if (this.letters)
-                this.letters.removeClass('btn-info').removeClass('btn-primary');
+                this.letters.removeClass(this.btnSuggest).removeClass(this.btnHighlight).addClass(this.btnOff);
             this.trigger(Keyboard.SUBMIT,this.output.data('data'));
             this.output.data('data','');
             this.render();
         },
         onBack: function(){
             if (this.letters)
-                this.letters.removeClass('btn-info').removeClass('btn-primary');
+                this.letters.removeClass(this.btnSuggest).removeClass(this.btnHighlight).addClass(this.btnOff);
             var data = this.output.data('data');
             if (data.length)
                 this.output.data('data',data.slice(0,data.length-1));
@@ -258,7 +262,7 @@ define([
         },
         onClear: function() {
             if (this.letters)
-                this.letters.removeClass('btn-info').removeClass('btn-primary');
+                this.letters.removeClass(this.btnSuggest).removeClass(this.btnHighlight).addClass(this.btnOff);
             this.output.data('data','');
             this.render();
         },
@@ -316,21 +320,21 @@ define([
         }, render : function(){
 //            this.$el.empty().append(this.elements);
             this.delegateEvents();
-            this.output.html(this.output.data('data')+'<button class="close lt-clear">&times;</button>');
+            this.output.val(this.output.data('data'));
             if (!this.letters){
                 this.letters = $('.letter');
-                this.letters.filter(function(){
-                    return $(this).attr('data-prob') > 2;
-                }).css('border','thin solid blue')
+//                this.letters.filter(function(){
+//                    return $(this).attr('data-prob') > 2;
+//                }).css('border','thin solid blue')
             }
 
             return this;
         },
         setSelectionbyLetter: function(letter){
             this.selection = letter;
-            if (this.letters) this.letters.removeClass('btn-primary');
+            if (this.letters) this.letters.removeClass(this.btnHighlight).addClass(this.btnOff);
             if (letter) {
-                var $l =  $('button[data-letter="'+letter+'"]').addClass('btn-primary');
+                var $l =  $('button[data-letter="'+letter+'"]').addClass(this.btnHighlight);
             //    this.row = $l.attr('data-row');
             //    this.col = $l.attr('data-col');
             }
@@ -343,18 +347,20 @@ define([
                 var btnSize = 'letter btn-large';
                 if (letters[l] < 6) btnSize = 'letter';
                 if (letters[l] < 2) btnSize = 'letter btn-mini';
-                btnSize = 'btn '+btnSize;
-
+                btnSize = 'btn '+this.btnOff + " " +btnSize;
+//style="width:57px;"
                 if (l=='') el += '<td>&nbsp;</td>'
                 else {
-                    el += '<td><button data-row="'+row+'" data-col="'+col+'" data-prob="'+letters[l]+'" data-letter="'+l+'" style="width:57px;" class="'+btnSize+'">'+l.toUpperCase()+'</button></td>';
+                    el += '<td align="center"><button data-row="'+row+'" data-col="'+col+'" data-prob="'+letters[l]+
+                        '" data-letter="'+l+'"  class="'+btnSize+'"><strong>'+l.toUpperCase()+'</strong></button></td>';
                 }
                 col++;
-            });
+            },this);
             return el+'</tr>';
         }
     });
     Keyboard.SUBMIT = 'keyboard-submit';
+    Keyboard.CHANGE = 'keyboard-change';
 
 //    var Router = Backbone.Router.extend({
 //        routes: {

@@ -23,7 +23,6 @@ define([
         render:function(){
 
             this.delegateEvents();
-  //          var readout = $('.readout');
             var html = '';
             var idx = 0;
             _.each(this.words, function(w){
@@ -36,7 +35,6 @@ define([
             this.output.val(this.words.join(' '));
             this.$el.empty().append($(html));
             this.delegateEvents();
-//            readout.empty().html(html);
 
             return this;
         },
@@ -55,20 +53,26 @@ define([
                 self.words = val.split(' ');
                 self.render();
                 self.nextWord();
-//                if (self.val != val){
-//                    self.controller.nextWord(val);
-//                    var last = val.split(' ');
-//                    self.controller.suggest(last && last[last.length-1]);
-//                    self.val = val;
-//                    self.words = val.split(' ');
-//                }
-//                console.log('val',val,'options2',options);
+                if (self.words && self.words.length);
+                    self.controller.suggest(self.words[self.words.length-1]);
             });
 
-            $('#submit').click(function(){
+            $('.submit').click(function(){
                 self.submit();
                 self.say();
                 self.clear();
+            });
+            $('.say').click(function(){
+                self.say();
+            });
+            $('.clear').click(function(){
+                self.clear();
+            });
+            $('.go').click(function(){
+                self.url();
+            });
+            $('.search').click(function(){
+                self.search();
             });
 
         },
@@ -114,7 +118,6 @@ define([
 //            this.controller.nextWord(output.val());
             console.log(this.words.join(' '));
             this.controller.nextWord(this.words.join(' '));
-            this.controller.suggest(this.words && this.words[this.words.length-1]);
         },
         remove: function(){
             // need to replace with something better and/or use unigram parsing here.
