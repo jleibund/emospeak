@@ -50,9 +50,10 @@ define([
     'views/FooterView',
     'views/SelectorView',
     'views/ModeView',
+    'views/KeyboardView',
     'controller-proxy',
     'event-type'
-], function($, _, Backbone, CubeView, FooterView, SelectorView, ModeView, Controller, EventType) {
+], function($, _, Backbone, CubeView, FooterView, SelectorView, ModeView, KeyboardView, Controller, EventType) {
 
 
 //    function up(e) {return e.keyCode === 38}
@@ -80,34 +81,38 @@ define([
             var controller = this.controller = new Controller();
             var wordView  = new SelectorView({controller:controller, mode:'words', el:$('.words')});
             var suggestView  = new SelectorView({controller:controller, mode:'suggested', el:$('.suggested')});
-            var vowelView = new SelectorView({controller:controller, mode:'vowels', el:$('.vowels')});
-            var c1View = new SelectorView({controller:controller, mode:'c1', el:$('.c1')});
-            var c2View = new SelectorView({controller:controller, mode:'c2', el:$('.c2')});
-            var c3View = new SelectorView({controller:controller, mode:'c3', el:$('.c3')});
-            var symbolView = new SelectorView({controller:controller, mode:'symbols', el:$('.symbols')});
+//            var vowelView = new SelectorView({controller:controller, mode:'vowels', el:$('.vowels')});
+//            var c1View = new SelectorView({controller:controller, mode:'c1', el:$('.c1')});
+//            var c2View = new SelectorView({controller:controller, mode:'c2', el:$('.c2')});
+//            var c3View = new SelectorView({controller:controller, mode:'c3', el:$('.c3')});
+//            var symbolView = new SelectorView({controller:controller, mode:'symbols', el:$('.symbols')});
             var actionView = new SelectorView({controller:controller, mode:'actions', el:$('.actions')});
-            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView, vowels:vowelView, c1:c1View, c2:c2View, c3:c3View, symbols:symbolView, actions:actionView};
+//            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView, vowels:vowelView, c1:c1View, c2:c2View, c3:c3View, symbols:symbolView, actions:actionView};
+            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView, actions:actionView};
 
-            var cubeView = this.cubeView = new CubeView({controller:controller});
-            var footerView = this.footerView = new FooterView({controller:controller});
+//            var cubeView = this.cubeView = new CubeView({controller:controller});
+            var footerView = this.footerView = new FooterView({controller:controller, el:$('.readout')});
             var modeView = this.modeView = new ModeView({controller:controller});
+            var keyboardView = this.keyboardView = new KeyboardView({controller:controller, el:$('.lt')});
 
-            controller.addListener(EventType.BLINK,function(e){cubeView.center()});
-            controller.addListener(EventType.LIFT,function(e){cubeView.moveUp()});
-            controller.addListener(EventType.DROP,function(e){cubeView.moveDown()});
-            controller.addListener(EventType.LOOK_LEFT,function(e){cubeView.moveLeft()});
-            controller.addListener(EventType.LOOK_RIGHT,function(e){cubeView.moveRight()});
+            keyboardView.on(KeyboardView.SUBMIT,function(e){footerView.add(e)});
+
+//            controller.addListener(EventType.BLINK,function(e){cubeView.center()});
+//            controller.addListener(EventType.LIFT,function(e){cubeView.moveUp()});
+//            controller.addListener(EventType.DROP,function(e){cubeView.moveDown()});
+//            controller.addListener(EventType.LOOK_LEFT,function(e){cubeView.moveLeft()});
+//            controller.addListener(EventType.LOOK_RIGHT,function(e){cubeView.moveRight()});
 //            controller.addListener(EventType.LEFT,function(e){cubeView.moveLeft()});
 //            controller.addListener(EventType.RIGHT,function(e){cubeView.moveRight()});
-            controller.addListener(EventType.PUSH,function(e){cubeView.movePush()});
-            controller.addListener(EventType.PULL,function(e){cubeView.movePull()});
-            controller.addListener(EventType.ROTATE_FWD,function(e){cubeView.rotateFwd()});
-            controller.addListener(EventType.ROTATE_BCK,function(e){cubeView.rotateBck()});
-            controller.addListener(EventType.ROTATE_CW,function(e){cubeView.rotateCW()});
-            controller.addListener(EventType.ROTATE_CCW,function(e){cubeView.rotateCCW()});
-            controller.addListener(EventType.ROTATE_LEFT,function(e){cubeView.rotateLeft()});
-            controller.addListener(EventType.ROTATE_RIGHT,function(e){cubeView.rotateRight()});
-            controller.addListener(EventType.NEUTRAL,function(e){cubeView.center()});
+//            controller.addListener(EventType.PUSH,function(e){cubeView.movePush()});
+//            controller.addListener(EventType.PULL,function(e){cubeView.movePull()});
+//            controller.addListener(EventType.ROTATE_FWD,function(e){cubeView.rotateFwd()});
+//            controller.addListener(EventType.ROTATE_BCK,function(e){cubeView.rotateBck()});
+//            controller.addListener(EventType.ROTATE_CW,function(e){cubeView.rotateCW()});
+//            controller.addListener(EventType.ROTATE_CCW,function(e){cubeView.rotateCCW()});
+//            controller.addListener(EventType.ROTATE_LEFT,function(e){cubeView.rotateLeft()});
+//            controller.addListener(EventType.ROTATE_RIGHT,function(e){cubeView.rotateRight()});
+//            controller.addListener(EventType.NEUTRAL,function(e){cubeView.center()});
 
             controller.addListener(EventType.NEXTWORD,function(e){wordView.wordOptions(e)});
             controller.addListener(EventType.SUGGEST,function(e){suggestView.wordOptions(e)});
@@ -155,7 +160,7 @@ define([
 //            controller.addListener(EventType.PUSH,function(e){controller.say('Yes')});
 //            controller.addListener(EventType.PULL,function(e){controller.say('No')});
 
-            $("#container").html(cubeView.render().el).show();
+//            $("#container").html(cubeView.render().el).show();
 
             _.each(_.values(selectorMap), function(v){v.render()});
             controller.setMode('words');
