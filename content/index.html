@@ -32,82 +32,87 @@
                 <!--</div>-->
             </div>
         </div>
-        <div class="container container-fluid">
-            <div class="row-fluid">
+        <div class="container">
+            <div class="row" >
                 <div class="span12">
-                    <div class="span2" id="selector">
-                        <ul class="nav nav-list">
-                            <li class="nav-header">words</li>
-                        </ul>
-                        <div class="well">
-                            <div class="scroll-menu">
-                                <ul class="nav nav-list words">
-                                    <li><a href="#">Loading...</a></li>
-                                </ul>
-                            </div>
+                    <ul class="nav nav-list">
+                        <li class="nav-header">favorites</li>
+                    </ul>
+                    <div class="well favorite-view">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="span4" id="selector">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">words</li>
+                    </ul>
+                    <div class="well">
+                        <div class="scroll-menu">
+                            <ul class="nav nav-list words">
+                                <li><a href="#">Loading...</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="span2">
-                        <ul class="nav nav-list">
-                            <li class="nav-header">suggested</li>
-                        </ul>
-                        <div class="well">
-                            <div class="scroll-menu">
-                                <ul class="nav nav-list suggested">
-                                    <li><a href="#">Loading...</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="lt span7">
+                </div>
+                <!--<div class="span3">-->
+                    <!--<ul class="nav nav-list">-->
+                        <!--<li class="nav-header">suggested</li>-->
+                    <!--</ul>-->
+                    <!--<div class="well">-->
+                        <!--<div class="scroll-menu">-->
+                            <!--<ul class="nav nav-list suggested">-->
+                                <!--<li><a href="#">Loading...</a></li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="span8">
+                    <div class="lt">
                         <ul class="nav nav-list">
                             <li class="nav-header">keyboard</li>
                         </ul>
-                        <div class="well">
-                            <table class="lt-table">
-                            </table>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="input-prepend input-append">
-                                <span class="add-on btn-success"><i class="icon-ok icon-white lt-done"></i></span>
-                                <input class="span9 lt-output"></input>
-                                <span class="add-on btn-danger"><i class="icon-remove icon-white lt-clear"></i></span>
-                                <button class="btn lt-back pull-right">Backspace</button>
+                        <div class="well well-large">
+                            <div align="center">
+                                <table class="lt-table">
+                                </table>
+                            </div>
+                            <div style="padding-top: 20px">
+                                <div class="btn-group">
+                                    <button class="btn btn-small btn-success lt-done" type="button"><i class="icon-ok icon-white"></i> <strong>Add</strong></button>
+                                    <button class="btn btn-small btn-success lt-favorite" type="button"><i class="icon-star icon-white"></i> <strong>Favorite</strong></button>
+                                </div>
+                                <input type="text" class=" search-query lt-output"></input>
+                                <div class="btn-group">
+                                    <button class="btn btn-small btn-danger lt-back" type="button"><i class="icon-arrow-left icon-white"></i> <strong>Backspace</strong></button>
+                                    <button class="btn btn-small btn-danger lt-clear" type="button"><i class="icon-remove icon-white"></i> <strong>Clear</strong></button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <ul class="nav nav-list">
-                <li class="nav-header">favorites</li>
-            </ul>
-            <div class="row-fluid" >
-                <div class="well span11">
-                    <button class="btn btn-small btn-info favorite" type="button"><strong>Peter</strong></button>
-                    <button class="btn btn-small btn-info favorite" type="button"><strong>Candy</strong></button>
-                    <button class="btn btn-small btn-info favorite" type="button"><strong>JP</strong></button>
-                    <button class="btn btn-small btn-info favorite" type="button"><strong>Chris</strong></button>
-
-                </div>
-            </div>
-            <ul class="nav nav-list">
-                <li class="nav-header">actions</li>
-            </ul>
-            <div class="row-fluid" >
-                <div class="well span11">
-                    <ul class="pager readout">
-                    </ul>
-                    <div align="center">
-                        <div class="input-prepend input-append">
-                            <span class="add-on btn-success"><i class="icon-repeat icon-white say"></i></span>
-                            <input id="output" name="output" class="span8"></input>
-                            <span class="add-on btn-danger"><i class="icon-remove icon-white clear"></i></span>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-small btn-success submit" type="button"><i class="icon-ok icon-white"></i> <strong>Submit</strong></button>
-                            <button class="btn btn-small btn-success go" type="button"><i class="icon-share-alt icon-white"></i> <strong>Go</strong></button>
-                            <button class="btn btn-small btn-success search" type="button"><i class="icon-search icon-white"></i> <strong>Search</strong></button>
+            <div class="row" >
+                <div class="span12">
+                    <!--<ul class="nav nav-list">-->
+                        <!--<li class="nav-header">actions</li>-->
+                    <!--</ul>-->
+                    <div class="well">
+                        <ul class="pager readout">
+                        </ul>
+                        <div align="center">
+                            <div class="btn-group">
+                                <button class="btn btn-small btn-success say" type="button"><i class="icon-repeat icon-white"></i> <strong>Say</strong></button>
+                                <button class="btn btn-small btn-success submit" type="button"><i class="icon-ok icon-white"></i> <strong>Enter</strong></button>
+                                <button class="btn btn-small btn-success go" type="button"><i class="icon-share-alt icon-white"></i> <strong>Go</strong></button>
+                                <button class="btn btn-small btn-success search" type="button"><i class="icon-search icon-white"></i> <strong>Search</strong></button>
+                            </div>
+                            <input id="output" type="text" name="output" class="span6 search-query"></input>
+                            <div class="btn-group">
+                                <button class="btn btn-small btn-danger clear" type="button"><i class="icon-remove icon-white"></i> <strong>Clear</strong></button>
+                            </div>
                         </div>
                     </div>
                 </div>

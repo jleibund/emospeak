@@ -44,6 +44,34 @@ app.get('/bigrams/:id', function(req,res,next){
     });
 })
 
+var favorites = ['peter', 'candy'];
+
+app.get('/favorite', function(req,res,next){
+    res.send({
+        status:0,
+        payload:favorites
+    });
+});
+
+app.post('/favorite', function(req,res,next){
+    var f = req.body.favorite;
+    if (f)
+        favorites.push(f);
+    res.send({
+        status:0,
+        payload:favorites
+    });
+});
+
+app.delete('/favorite', function(req,res,next){
+    console.log('delete',req.body.favorite)
+    favorites.splice(favorites.indexOf(req.body.favorite),1);
+    res.send({
+        status:0,
+        payload:favorites
+    });
+});
+
 ///////////////////////////////////////////////////////
 
 

@@ -38,7 +38,6 @@ define([
             })
             socket.on('connect', function () {
                 self.nextWord('');
-                self.suggest('');
             });
 //            socket.on('disconnect', function () {
 //            });
@@ -57,15 +56,6 @@ define([
                 if (cb) cb(obj.payload);
             });
             return this;
-        },
-        getMode: function(){
-            return this.mode;
-        },
-        setMode: function(mode){
-            var oldMode = this.mode;
-            this.mode = mode;
-            this.ee.emit(EventType.MODE,{old:oldMode, mode:mode});
-//            this.ee.emit(Controller.events.MODE,{old:oldMode, mode:mode});
         }
     });
 

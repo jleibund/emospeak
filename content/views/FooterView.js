@@ -27,8 +27,7 @@ define([
             var idx = 0;
             _.each(this.words, function(w){
                 if (w && w != '' && w != ' '){
-                    console.log('word: "'+w+'"')
-                    html += '<li class="kill-word" data-word="'+w+'" data-index="'+idx+'"><a href="#">'+w+' &times;</a></li>';
+                    html += '<li class="kill-word" data-word="'+w+'" data-index="'+idx+'"><a href="#" class="btn-info"><strong>'+ w.toUpperCase()+' &times;</strong></a></li>';
                     idx++;
                 }
             });
@@ -53,8 +52,8 @@ define([
                 self.words = val.split(' ');
                 self.render();
                 self.nextWord();
-                if (self.words && self.words.length);
-                    self.controller.suggest(self.words[self.words.length-1]);
+//                if (self.words && self.words.length);
+//                    self.controller.suggest(self.words[self.words.length-1]);
             });
 
             $('.submit').click(function(){
@@ -99,17 +98,11 @@ define([
             // need to replace with something better and/or use unigram parsing here.
             var output = this.output;
             console.log('add',text);
-            var mode = this.controller.getMode();
             if (text && text != ''){
                 this.words.push(text);
-//                var space = (mode =='words' || mode == 'suggested')? ' ':'';
-//                var suggested = (mode == 'suggested');
-//                output.val(val);
-//                this.words = val.split(' ');
                 console.log('words',this.words);
                 this.nextWord();
             }
-            this.prevMode = mode;
             this.render();
         },
         nextWord: function(){
@@ -121,18 +114,7 @@ define([
         },
         remove: function(){
             // need to replace with something better and/or use unigram parsing here.
-            var mode = this.controller.getMode();
-//            var output = $('#output');
-            console.log('remove');
-//            if (mode == 'words' && this.words.length>0){
-                this.words.pop();
-//                var val = this.words.join(' ');
-//                output.val(val);
-//                this.nextWord();
-//                this.controller.nextWord(val);
-//            } else {
-//                output.val(output.val().substring(0,output.val().length-1));
-//            }
+            this.words.pop();
             this.nextWord();
         }
     });

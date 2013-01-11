@@ -48,7 +48,10 @@ define([
         ',':2,
         '!':2,
         '?':2,
-        '\"':2
+        '\"':2,
+        '.com':1,
+        '-':2,
+        '\'':2
     };
 
     var bgs = {
@@ -173,9 +176,9 @@ define([
     var choices = [
         ['j','u','r','v','m','c','','1','2','3','','/','?','http://'],
         ['q','f','o','a','i','l','','4','5','6','','@','!','https://'],
-        ['y','s','t','h','n','k','','7','8','9','','.',',','\"'],
-        ['x','w','g','e','d','','','','0','','',''],
-        ['','','p','b','z','','']
+        ['y','s','t','h','n','k','','7','8','9','','.',',','.com'],
+        ['x','w','g','e','d','','','','0','','','\"',"\'"],
+        ['','','p','b','z']
     ];
 
     var KeyboardDict = Backbone.Model.extend({
@@ -188,7 +191,8 @@ define([
             'click .letter' : 'onClick',
             'click .lt-done' : 'onDone',
             'click .lt-clear' : 'onClear',
-            'click .lt-back' : 'onBack'
+            'click .lt-back' : 'onBack',
+            'click .lt-favorite' : 'onFavorite'
         },
         btnOff:'btn-inverse',
         btnSuggest:'btn-success',
@@ -215,6 +219,9 @@ define([
             this.trigger(Keyboard.CHANGE,this.output.data('data'));
 
             this.render();
+        },
+        onFavorite: function() {
+            this.trigger(Keyboard.FAVORITE,this.output.data('data'));
         },
         onDictionary: function(data,l){
             var found = false;
@@ -264,6 +271,7 @@ define([
             if (this.letters)
                 this.letters.removeClass(this.btnSuggest).removeClass(this.btnHighlight).addClass(this.btnOff);
             this.output.data('data','');
+            this.trigger(Keyboard.CLEAR);
             this.render();
         },
         initialize : function(){
@@ -310,10 +318,15 @@ define([
 
             console.log('navmap', navMap);
 
+            var self = this;
+
             this.elements = elements;
             this.table = $('.lt-table');
             this.done = $('.lt-done');
             this.output = $('.lt-output').data('data','');
+            this.output.keyup(function(e){
+                self.output.data('data',self.output.val());
+            });
             this.table.html(this.elements);
             this.render();
 
@@ -361,6 +374,8 @@ define([
     });
     Keyboard.SUBMIT = 'keyboard-submit';
     Keyboard.CHANGE = 'keyboard-change';
+    Keyboard.CLEAR = 'keyboard-clear';
+    Keyboard.FAVORITE = 'keyboard-favorite';
 
 //    var Router = Backbone.Router.extend({
 //        routes: {

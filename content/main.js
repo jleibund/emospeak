@@ -51,9 +51,10 @@ define([
     'views/SelectorView',
     'views/ModeView',
     'views/KeyboardView',
+    'views/FavoriteView',
     'controller-proxy',
     'event-type'
-], function($, _, Backbone, CubeView, FooterView, SelectorView, ModeView, KeyboardView, Controller, EventType) {
+], function($, _, Backbone, CubeView, FooterView, SelectorView, ModeView, KeyboardView, FavoriteView, Controller, EventType) {
 
 
 //    function up(e) {return e.keyCode === 38}
@@ -79,16 +80,20 @@ define([
 
         //    var conn = mongoose.createConnection("mongodb://localhost/emospeak");
             var controller = this.controller = new Controller();
-            var wordView  = new SelectorView({controller:controller, mode:'words', el:$('.words')});
-            var suggestView  = new SelectorView({controller:controller, mode:'suggested', el:$('.suggested')});
-            var selectorMap = this.selectorMap = {words:wordView, suggested:suggestView};
+            var wordView  = new SelectorView({el:$('.words')});
+//            var suggestView  = new SelectorView({controller:controller, mode:'suggested', el:$('.suggested')});
+//            var selectorMap = this.selectorMap = {words:wordView};
 
             var footerView = this.footerView = new FooterView({controller:controller, el:$('.readout')});
-            var modeView = this.modeView = new ModeView({controller:controller});
-            var keyboardView = this.keyboardView = new KeyboardView({controller:controller, el:$('.lt')});
+            var keyboardView = this.keyboardView = new KeyboardView({el:$('.lt')});
+            var favoriteView = this.favoriteView = new FavoriteView({el:$('.favorite-view')});
 
             keyboardView.on(KeyboardView.SUBMIT,function(e){footerView.add(e)});
             keyboardView.on(KeyboardView.CHANGE,function(e){controller.suggest(e)});
+            keyboardView.on(KeyboardView.FAVORITE,function(e){favoriteView.save(e)});
+            keyboardView.on(KeyboardView.CLEAR,function(e){footerView.nextWord()});
+            favoriteView.on(FavoriteView.SELECT, function(e){footerView.add(e)});
+            wordView.on(SelectorView.SELECT,function(e){controller.emit(EventType.SELECT,e)});
 
 //            controller.addListener(EventType.BLINK,function(e){cubeView.center()});
 //            controller.addListener(EventType.LIFT,function(e){cubeView.moveUp()});
@@ -108,18 +113,18 @@ define([
 //            controller.addListener(EventType.NEUTRAL,function(e){cubeView.center()});
 
             controller.addListener(EventType.NEXTWORD,function(e){wordView.wordOptions(e)});
-            controller.addListener(EventType.SUGGEST,function(e){suggestView.wordOptions(e)});
+            controller.addListener(EventType.SUGGEST,function(e){wordView.wordOptions(e)});
 //            controller.addListener(EventType.LIFT,function(e){ selectorMap[controller.getMode()].moveUp()});
 //            controller.addListener(EventType.DROP,function(e){ selectorMap[controller.getMode()].moveDown()});
 //            controller.addListener(EventType.PULL,function(e){ selectorMap[controller.getMode()].pick()});
-            controller.addListener(EventType.BLINK,function(e){ selectorMap[controller.getMode()].pick()});
+            controller.addListener(EventType.BLINK,function(e){ wordView.pick()});
 
 //            controller.addListener(EventType.MODE,function(e){ });
 
-            controller.addListener(EventType.MODE,function(e){modeView.onSetMode(e)});
-            controller.addListener(EventType.MODE,function(e){if (e.mode == 'words') footerView.nextWord()});
+//            controller.addListener(EventType.MODE,function(e){modeView.onSetMode(e)});
+//            controller.addListener(EventType.MODE,function(e){if (e.mode == 'words') footerView.nextWord()});
 //            controller.addListener(EventType.MODE,function(e){selectorMap[controller.getMode()].setSelection(0)})
-            controller.addListener(EventType.MODE,function(e){_.each(_.values(selectorMap), function(view){view.setSelection(0)})});
+//            controller.addListener(EventType.MODE,function(e){_.each(_.values(selectorMap), function(view){view.setSelection(0)})});
 //            controller.addListener(EventType.LOOK_RIGHT,function(e){modeView.nextMode()});
 //            controller.addListener(EventType.LOOK_LEFT,function(e){modeView.prevMode()});
 
@@ -142,10 +147,12 @@ define([
             controller.addListener(EventType.GYRO_DELTA,function(e){
 //                console.log('gyro',e)
 
-                if (e.x > delta) modeView.nextMode();
-                else if (e.x < -delta) modeView.prevMode();
-                if (e.y > delta) selectorMap[controller.getMode()].moveUp();
-                else if (e.y < -delta) selectorMap[controller.getMode()].moveDown();
+                // change this
+//                if (e.x > delta) modeView.nextMode();
+//                else if (e.x < -delta) modeView.prevMode();
+
+                if (e.y > delta) wordView.moveUp();
+                else if (e.y < -delta) wordView.moveDown();
             });
 
             // what to do about clear, submitLine, etc?
@@ -156,8 +163,7 @@ define([
 
 //            $("#container").html(cubeView.render().el).show();
 
-            _.each(_.values(selectorMap), function(v){v.render()});
-            controller.setMode('words');
+//            _.each(_.values(selectorMap), function(v){v.render()});
         }
     });
 
