@@ -201,21 +201,27 @@ define([
             e.preventDefault();
 
             var l = $(e.currentTarget).attr('data-letter');
+            this.changeLetter(this.output.data('data')+l)
+        },
+        changeLetter: function(word){
             var out = this.output;
-            out.data('data',out.data('data')+l);
+            out.data('data',word);
+            var l = (word && word.length) ? word.charAt(word.length-1) : null;
 
             if (this.letters)
                 this.letters.removeClass(this.btnSuggest).addClass(this.btnOff);
 
-            this.onBigrams(bgs,l);
-            var self = this;
-            var kbm = new KeyboardDict({id:l});
-            kbm.fetch({
-                success:function(data){
-                    self.onLetters(data.toJSON().payload,l)
-                }
-            })
-            this.onDictionary(words,l);
+            if (l){
+                this.onBigrams(bgs,l);
+                var self = this;
+                var kbm = new KeyboardDict({id:l});
+                kbm.fetch({
+                    success:function(data){
+                        self.onLetters(data.toJSON().payload,l)
+                    }
+                })
+                this.onDictionary(words,l);
+            }
             this.trigger(Keyboard.CHANGE,this.output.data('data'));
 
             this.render();
@@ -263,9 +269,15 @@ define([
             if (this.letters)
                 this.letters.removeClass(this.btnSuggest).removeClass(this.btnHighlight).addClass(this.btnOff);
             var data = this.output.data('data');
-            if (data.length)
-                this.output.data('data',data.slice(0,data.length-1));
-            this.render();
+            var word = data.slice(0,data.length-1);
+            this.output.data('data',word);
+            if (word && word.length>0) {
+                this.changeLetter(word);
+            } else {
+                this.trigger(Keyboard.CLEAR);
+                this.render();
+            }
+
         },
         onClear: function() {
             if (this.letters)
@@ -325,7 +337,14 @@ define([
             this.done = $('.lt-done');
             this.output = $('.lt-output').data('data','');
             this.output.keyup(function(e){
-                self.output.data('data',self.output.val());
+                var word = self.output.val()
+                self.output.data('data',word);
+                if (word && word.length>0) {
+                    self.changeLetter(word);
+                } else {
+                    self.trigger(Keyboard.CLEAR);
+                    self.render();
+                }
             });
             this.table.html(this.elements);
             this.render();
