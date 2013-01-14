@@ -22,8 +22,6 @@ define([
 //            this.choices = this[this.mode];
             var str = '';
             var self = this;
-//            if (this.mode == this.controller.getMode())
-//                console.log('select:',this.selected, 'choices', this.choices);
 
             var idx = 0;
             _.each(this.words, function(item){
@@ -66,19 +64,35 @@ define([
             this.render();
         },
         setSelection: function(idx){
-            if (!idx) idx = 0;
+//            if (!idx) idx = 0;
           // don't rotate around
           //  if (choices && idx > choices.length-1) idx=0;
-            if (!this.words || idx < 0) return;
+//            if (!this.words || idx < 0) return;
 
             this.selected = idx;
             this.render();
         },
         moveUp: function(){
+            if (!this.selected){
+                this.trigger(SelectorView.MOVEUP);
+                this.selected = 1;
+            } else if (this.selected == -1  && this.words && this.words.length){
+                this.selected = this.words.length;
+            }
             this.setSelection(this.selected-1);
         },
         moveDown: function(){
+            if (this.words && this.words.length && this.selected == this.words.length-1){
+                this.trigger(SelectorView.MOVEDOWN);
+                this.selected = this.words.length-2;
+            }
             this.setSelection(this.selected+1);
+        },
+        moveLeft: function(){
+            this.trigger(SelectorView.MOVELEFT);
+        },
+        moveRight: function(){
+            this.trigger(SelectorView.MOVERIGHT);
         },
         pick: function(){
             if (this.words && _.size(this.words) > this.selected){
@@ -89,6 +103,10 @@ define([
         }
     });
     SelectorView.SELECT = 'selector-select';
+    SelectorView.MOVEUP = 'selector-moveup';
+    SelectorView.MOVEDOWN = 'selector-movedown';
+    SelectorView.MOVELEFT = 'selector-moveleft';
+    SelectorView.MOVERIGHT = 'selector-moveright';
 
     return SelectorView;
 });

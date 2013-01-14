@@ -143,16 +143,27 @@ define([
 //            controller.addListener(EventType.LOOK_RIGHT,function(e){ footerView.add(' ')});
 //            controller.addListener(EventType.BLINK,function(e){ footerView.say()});
 
-            var delta = 8;
+            var delta = 11;
+            this.curView = wordView;
+            var self = this;
+            wordView.on(SelectorView.MOVERIGHT,function(e){
+                self.curView = keyboardView;
+                keyboardView.setSelection('y');
+                wordView.setSelection(-1);
+            });
+            keyboardView.on(KeyboardView.MOVELEFT, function(e){
+                self.curView = wordView;
+                wordView.setSelection(0);
+                keyboardView.setSelection(null);
+            });
             controller.addListener(EventType.GYRO_DELTA,function(e){
-//                console.log('gyro',e)
 
                 // change this
-//                if (e.x > delta) modeView.nextMode();
-//                else if (e.x < -delta) modeView.prevMode();
+                if (e.x > delta && self.curView)  self.curView.moveRight();
+                else if (e.x < -delta && self.curView)  self.curView.moveLeft();
 
-                if (e.y > delta) wordView.moveUp();
-                else if (e.y < -delta) wordView.moveDown();
+                if (e.y > delta && self.curView)  self.curView.moveUp();
+                else if (e.y < -delta && self.curView)  self.curView.moveDown();
             });
 
             // what to do about clear, submitLine, etc?

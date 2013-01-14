@@ -286,6 +286,34 @@ define([
             this.trigger(Keyboard.CLEAR);
             this.render();
         },
+        moveUp:function(){
+            this.move('up', Keyboard.MOVEUP,'b');
+        },
+        moveDown:function(){
+            this.move('down', Keyboard.MOVEDOWN,'v');
+        },
+        moveLeft:function(){
+            this.move('left', Keyboard.MOVELEFT,'.com');
+        },
+        moveRight:function(){
+            this.move('right', Keyboard.MOVERIGHT,'y');
+        },
+        move:function(dir, evt, def){
+            if (this.selection){
+                var nav = this.navMap[this.selection];
+                var next = nav && nav[dir];
+                if (!next){
+                    this.setSelection(this.selection);
+                    this.trigger(evt,this.selection);
+                } else {
+                    this.setSelection(next);
+                }
+            }
+//            else {
+//                // we are coming in from below somewhere = go for the middle
+//                this.setSelection(def);
+//            }
+        },
         initialize : function(){
             var elements = '';
 
@@ -327,14 +355,29 @@ define([
                 elements += this.makeElement(cList,row++);
 
             },this);
+            navMap['lt-done'] = {up:'p',down:null, left:null, right:'lt-favorite'};
+            navMap['lt-favorite'] = {up:'b',down:null, left:'lt-done', right:'lt-back'};
+            navMap['lt-back'] = {up:'z',down:null, left:'lt-favorite', right:'lt-clear'};
+            navMap['lt-clear'] = {up:'0',down:null, left:'lt-back', right:null};
+            navMap['x'].down = 'lt-done';
+            navMap['w'].down = 'lt-done';
+            navMap['p'].down = 'lt-done';
+            navMap['b'].down = 'lt-done';
+            navMap['z'].down = 'lt-done';
+            navMap['0'].down = 'lt-done';
+            navMap['\"'].down = 'lt-done';
+            navMap['\''].down = 'lt-done';
 
-            console.log('navmap', navMap);
+//            console.log('navmap', navMap);
 
             var self = this;
 
             this.elements = elements;
             this.table = $('.lt-table');
-            this.done = $('.lt-done');
+            this.doneButton = $('.lt-done');
+            this.backButton = $('.lt-back');
+            this.clearButton = $('.lt-clear');
+            this.favoiteButton = $('.lt-favorite');
             this.output = $('.lt-output').data('data','');
             this.output.keyup(function(e){
                 var word = self.output.val()
@@ -362,14 +405,28 @@ define([
 
             return this;
         },
-        setSelectionbyLetter: function(letter){
+        setSelection: function(letter){
+//            if (!this.selection && letter){
+//                this.trigger(Keyboard.MOVEIN, letter);
+//            } else if (this.selection && !letter){
+//                this.trigger(Keyboard.MOVEOUT, this.selection);
+//            }
             this.selection = letter;
-            if (this.letters) this.letters.removeClass(this.btnHighlight).addClass(this.btnOff);
+            if (this.letters) this.letters.removeClass(this.btnHighlight).removeClass(this.btnSuggest).addClass(this.btnOff);
+            this.resetActions();
             if (letter) {
-                var $l =  $('button[data-letter="'+letter+'"]').addClass(this.btnHighlight);
-            //    this.row = $l.attr('data-row');
-            //    this.col = $l.attr('data-col');
+                if (letter == 'lt-done' || letter == 'lt-favorite' || letter == 'lt-back' || letter == 'lt-clear'){
+                    $('.'+letter).removeClass('btn-success').removeClass('btn-danger').addClass(this.btnHighlight);
+                } else {
+                    $('button[data-letter="'+letter+'"]').removeClass(this.btnSuggest).removeClass(this.btnOff).addClass(this.btnHighlight);
+                }
             }
+        },
+        resetActions: function(){
+            this.doneButton.removeClass(this.btnHighlight).addClass('btn-success');
+            this.favoiteButton.removeClass(this.btnHighlight).addClass('btn-success');
+            this.backButton.removeClass(this.btnHighlight).addClass('btn-danger');
+            this.clearButton.removeClass(this.btnHighlight).addClass('btn-danger');
         },
         makeElement : function(ltrs, row){
 
@@ -395,19 +452,12 @@ define([
     Keyboard.CHANGE = 'keyboard-change';
     Keyboard.CLEAR = 'keyboard-clear';
     Keyboard.FAVORITE = 'keyboard-favorite';
+    Keyboard.MOVEUP = 'keyboard-moveup';
+    Keyboard.MOVEDOWN = 'keyboard-movedown';
+    Keyboard.MOVELEFT = 'keyboard-moveleft';
+    Keyboard.MOVERIGHT = 'keyboard-moveright';
+    Keyboard.MOVEOUT = 'keyboard-out';
+    Keyboard.MOVEIN = 'keyboard-out';
 
-//    var Router = Backbone.Router.extend({
-//        routes: {
-//            "*actions": "main"
-//        },
-//        main: function(){
-//            var kb = this.kb = new Keyboard({el:$('.lt')});
-//            this.kb.render();
-//        }
-//    });
-//
-//    var router = new Router();
-//    router.main();
-//    return router;
     return Keyboard;
 });

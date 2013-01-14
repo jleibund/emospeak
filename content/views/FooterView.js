@@ -116,8 +116,28 @@ define([
             // need to replace with something better and/or use unigram parsing here.
             this.words.pop();
             this.nextWord();
+        },
+        setSelection: function(idx){
+            this.selected = idx;
+            this.render();
+        },
+        moveUp: function(){
+        },
+        moveDown: function(){
+        },
+        moveLeft: function(){
+        },
+        moveRight: function(){
+        },
+        pick: function(){
+
         }
     });
+    FooterView.SELECT = 'footer-select';
+    FooterView.MOVEUP = 'footer-moveup';
+    FooterView.MOVEDOWN = 'footer-movedown';
+    FooterView.MOVELEFT = 'footer-moveleft';
+    FooterView.MOVERIGHT = 'footer-moveright';
 
     return FooterView;
 });

@@ -35,7 +35,8 @@ define([
             var idx = 0;
             _.each(this.words, function(w){
                 if (w && w != '' && w != ' '){
-                    html += '<button class="btn btn-small btn-info favorite" type="button" data-word="'+w+'" data-index="'+idx+'">' +
+                    var style = (this.selected && this.selected == idx)? 'btn-primary' : 'btn-info';
+                    html += '<button class="btn btn-small '+style+' favorite" type="button" data-word="'+w+'" data-index="'+idx+'">' +
                         '<strong>'+ w.toUpperCase()+'</strong><a href="#" data-word="'+w+
                         '" class="favorite-remove"><i class="icon-remove icon-white favorite-remove"></i></a></button> ';
                     idx++;
@@ -58,6 +59,9 @@ define([
                     self.onLoad(data.toJSON().payload)
                 }
             });
+        },
+        setSelected: function(idx){
+
         },
         save:function(word){
             var self = this;
@@ -82,6 +86,10 @@ define([
         }
     });
     FavoriteView.SELECT = 'favorite-select';
+    FavoriteView.MOVEUP = 'favorite-moveup';
+    FavoriteView.MOVEDOWN = 'favorite-movedown';
+    FavoriteView.MOVELEFT = 'favorite-moveleft';
+    FavoriteView.MOVERIGHT = 'favorite-moveright';
 
     return FavoriteView;
 });
