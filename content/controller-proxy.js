@@ -37,7 +37,7 @@ define([
                 self.socket.on(event, emit);
             })
             socket.on('connect', function () {
-                self.nextWord('');
+                self.emit('connect');
             });
 //            socket.on('disconnect', function () {
 //            });

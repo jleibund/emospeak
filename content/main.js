@@ -112,6 +112,7 @@ define([
 
             controller.addListener(EventType.NEXTWORD,function(e){wordView.wordOptions(e)});
             controller.addListener(EventType.SUGGEST,function(e){wordView.wordOptions(e)});
+            controller.addListener('connect',function(){footerView.nextWord()});
 //            controller.addListener(EventType.LIFT,function(e){ selectorMap[controller.getMode()].moveUp()});
 //            controller.addListener(EventType.DROP,function(e){ selectorMap[controller.getMode()].moveDown()});
 //            controller.addListener(EventType.PULL,function(e){ selectorMap[controller.getMode()].pick()});
@@ -124,8 +125,8 @@ define([
 //            controller.addListener(EventType.MODE,function(e){_.each(_.values(selectorMap), function(view){view.setSelection(0)})});
 //            controller.addListener(EventType.LOOK_RIGHT,function(e){modeView.nextMode()});
 //            controller.addListener(EventType.LOOK_LEFT,function(e){modeView.prevMode()});
+//            controller.addListener(EventType.PUSH, function(e){footerView.remove(); });
 
-            controller.addListener(EventType.PUSH, function(e){footerView.remove(); });
             controller.addListener(EventType.SELECT,function(e){footerView.add(e)});
             controller.addListener(EventType.SELECT,function(e){keyboardView.onClear(e)});
 

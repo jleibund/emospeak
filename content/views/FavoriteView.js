@@ -36,27 +36,28 @@ define([
             _.each(this.words, function(w){
                 if (w && w != '' && w != ' '){
                     var style = (this.selected && this.selected == idx)? 'btn-primary' : 'btn-info';
-                    html += '<button class="btn btn-small '+style+' favorite" type="button" data-word="'+w+'" data-index="'+idx+'">' +
-                        '<strong>'+ w.toUpperCase()+'</strong><a href="#" data-word="'+w+
-                        '" class="favorite-remove"><i class="icon-remove icon-white favorite-remove"></i></a></button> ';
-                    idx++;
+                    html += '<button class="btn btn-small '+style+' fav favorite" type="button" data-word="'+w+'" data-index="'+idx+'">' +
+                        '<strong>'+ w.toUpperCase()+'</strong></button><a href="#" data-word="'+w+
+                        '" data-index="'+(idx+1)+'" class="fav favorite-remove"><i class="icon-remove favorite-remove"></i></a> ';
+                    idx+=2;
                 }
             });
             this.$el.empty().append($(html));
-            this.delegateEvents();
             this.favorites = $('.favorite');
+            this.removes = $('.favorite-remove');
 
             return this;
         },
         initialize: function(){
             this.words = [];
-            this.model = new FavoriteModel();
 //            this.setNavMap();
             this.fetch();
         },
         fetch: function(){
             var self = this;
-            this.model.fetch({
+            var m = new FavoriteModel();
+
+            m.fetch({
                 success:function(data){
                     self.onLoad(data.toJSON().payload)
                 }
@@ -65,8 +66,10 @@ define([
         setSelection: function(idx){
             this.selection = idx;
             if (this.favorites) this.favorites.removeClass('btn-primary').addClass('btn-info');
+            if (this.removes) this.removes.removeClass('btn-primary');
             if (idx != null) {
-                var sel = $('button[data-index="'+idx+'"]');
+                var sel = $('[data-index="'+idx+'"]');
+//                if (!sel) sel = $('a[data-index="'+idx+'"]');
                 if (sel)
                     sel.removeClass('btn-info').addClass('btn-primary');
             }
@@ -75,8 +78,8 @@ define([
             var navMap = this.navMap = {};
             var up = null;
             if (this.words && this.words.length){
-                for (var i=0;i<this.words.length;i++){
-                    navMap[i] = {up:null,down:null,left:(i==0)?null:i-1, right: (i==this.words.length-1)?null:i+1}
+                for (var i=0;i<this.words.length*2;i++){
+                    navMap[i] = {up:null,down:null,left:(i==0)?null:i-1, right: (i==this.words.length*2-1)?null:i+1}
                 }
             }
         },
@@ -106,17 +109,19 @@ define([
         },
         save:function(word){
             var self = this;
-            this.model.save({favorite:word}, {
-                success: function(model, res){
-                    self.fetch();
+            var m = new FavoriteModel();
+            m.save({favorite:word}, {
+                success: function(data){
+                    self.onLoad(data.toJSON().payload);
                 }
             });
         },
         remove:function(word){
             var self = this;
-            var m = new FavoriteModel({favorite:word});
+            var m = new FavoriteModel({id:word});
             m.destroy({
-                success: function(model, res){
+                success: function(model, data){
+                    console.log(arguments)
                     self.fetch();
                 }
             });

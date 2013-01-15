@@ -63,9 +63,9 @@ app.post('/favorite', function(req,res,next){
     });
 });
 
-app.delete('/favorite', function(req,res,next){
-    console.log('delete',req.body.favorite)
-    favorites.splice(favorites.indexOf(req.body.favorite),1);
+app.delete('/favorite/:id', function(req,res,next){
+    console.log('delete',req.body.id)
+    favorites.splice(favorites.indexOf(req.body.id),1);
     res.send({
         status:0,
         payload:favorites
