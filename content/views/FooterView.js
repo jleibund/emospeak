@@ -4,6 +4,8 @@ define([
     'backbone'
 ], function($, _, Backbone){
 
+    var actions = ['say','go','search','submit','clear'];
+
     var FooterView = Backbone.View.extend({
         loaded:false,
         tagName:'ul',
@@ -55,25 +57,31 @@ define([
 //                if (self.words && self.words.length);
 //                    self.controller.suggest(self.words[self.words.length-1]);
             });
+            this.submitButton = $('.submit');
+            this.sayButton = $('.say');
+            this.goButton = $('.go');
+            this.clearButton = $('.clear');
+            this.searchButton = $('.search');
 
-            $('.submit').click(function(){
+            this.submitButton.click(function(){
                 self.submit();
                 self.say();
                 self.clear();
             });
-            $('.say').click(function(){
+            this.sayButton.click(function(){
                 self.say();
             });
-            $('.clear').click(function(){
+            this.clearButton.click(function(){
                 self.clear();
             });
-            $('.go').click(function(){
+            this.goButton.click(function(){
                 self.url();
             });
-            $('.search').click(function(){
+            this.searchButton.click(function(){
                 self.search();
             });
-
+            this.setNavMap();
+            this.render();
         },
         submit: function(){
             this.controller.submitLine(this.output.val());
@@ -103,6 +111,7 @@ define([
                 console.log('words',this.words);
                 this.nextWord();
             }
+            this.setNavMap();
             this.render();
         },
         nextWord: function(){
@@ -115,22 +124,72 @@ define([
         remove: function(){
             // need to replace with something better and/or use unigram parsing here.
             this.words.pop();
+            this.setNavMap();
             this.nextWord();
         },
         setSelection: function(idx){
-            this.selected = idx;
-            this.render();
+            this.selection = idx;
+            if (this.wordElements) this.wordElements.removeClass('btn-primary').addClass('btn-info');
+            this.resetActions();
+            if (idx != null) {
+                if (_.contains(actions,idx)){
+                    $('.'+idx).removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary');
+                } else {
+                    $('button[data-index="'+idx+'"]').removeClass('btn-info').addClass('btn-primary');
+                }
+            }
         },
-        moveUp: function(){
+        setNavMap :function(){
+            var navMap = this.navMap = {};
+            var up = null;
+            if (this.words && this.words.length){
+                for (var i=0;i<this.words.length;i++){
+                    navMap[i] = {up:null,down:'say',left:(i==0)?null:i-1, right: (i==this.words.length-1)?null:i+1}
+                }
+                up = 0;
+            }
+            // add in the buttons
+            navMap['say'] = {up:up, down:null, left:null, right:'submit'};
+            navMap['submit'] = {up:up, down:null, left:'say', right:'go'};
+            navMap['go'] = {up:up, down:null, left:'submit', right:'search'};
+            navMap['search'] = {up:up, down:null, left:'go', right:'clear'};
+            navMap['clear'] = {up:up, down:null, left:'search', right:null};
+            this.wordElements = $('.kill-word');
         },
-        moveDown: function(){
+        moveUp:function(){
+            this.move('up', FooterView.MOVEUP);
         },
-        moveLeft: function(){
+        moveDown:function(){
+            this.move('down', FooterView.MOVEDOWN);
         },
-        moveRight: function(){
+        moveLeft:function(){
+            this.move('left', FooterView.MOVELEFT);
         },
-        pick: function(){
-
+        moveRight:function(){
+            this.move('right', FooterView.MOVERIGHT);
+        },
+        move: function(dir,evt){
+            if (this.selection){
+                var nav = this.navMap[this.selection];
+                var next = nav && nav[dir];
+                if (!next){
+                    this.setSelection(this.selection);
+                    this.trigger(evt,this.selection);
+                } else {
+                    this.setSelection(next);
+                }
+            }
+        },
+        resetActions: function(){
+            this.sayButton.removeClass('btn-primary').addClass('btn-success');
+            this.goButton.removeClass('btn-primary').addClass('btn-success');
+            this.submitButton.removeClass('btn-primary').addClass('btn-success');
+            this.searchButton.removeClass('btn-primary').addClass('btn-success');
+            this.clearButton.removeClass('btn-primary').addClass('btn-danger');
+        },
+        pick:function(){
+            var curEl = $('.btn-primary');
+            if (curEl) curEl.trigger('click');
         }
     });
     FooterView.SELECT = 'footer-select';

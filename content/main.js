@@ -46,15 +46,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/CubeView',
     'views/FooterView',
     'views/SelectorView',
-    'views/ModeView',
     'views/KeyboardView',
     'views/FavoriteView',
     'controller-proxy',
     'event-type'
-], function($, _, Backbone, CubeView, FooterView, SelectorView, ModeView, KeyboardView, FavoriteView, Controller, EventType) {
+], function($, _, Backbone, FooterView, SelectorView, KeyboardView, FavoriteView, Controller, EventType) {
 
 
 //    function up(e) {return e.keyCode === 38}
@@ -117,7 +115,6 @@ define([
 //            controller.addListener(EventType.LIFT,function(e){ selectorMap[controller.getMode()].moveUp()});
 //            controller.addListener(EventType.DROP,function(e){ selectorMap[controller.getMode()].moveDown()});
 //            controller.addListener(EventType.PULL,function(e){ selectorMap[controller.getMode()].pick()});
-            controller.addListener(EventType.BLINK,function(e){ wordView.pick()});
 
 //            controller.addListener(EventType.MODE,function(e){ });
 
@@ -145,6 +142,7 @@ define([
 
             var delta = 11;
             this.curView = wordView;
+            wordView.setSelection(0);
             var self = this;
             wordView.on(SelectorView.MOVERIGHT,function(e){
                 self.curView = keyboardView;
@@ -156,6 +154,38 @@ define([
                 wordView.setSelection(0);
                 keyboardView.setSelection(null);
             });
+            wordView.on(SelectorView.MOVEDOWN,function(e){
+                self.curView = footerView;
+                footerView.setSelection('say');
+                wordView.setSelection(-1);
+            });
+            keyboardView.on(KeyboardView.MOVEDOWN,function(e){
+                self.curView = footerView;
+                footerView.setSelection('say');
+                keyboardView.setSelection(null);
+            });
+            footerView.on(FooterView.MOVEUP, function(e){
+                self.curView = wordView;
+                wordView.setLast();
+                footerView.setSelection(null);
+            });
+
+            favoriteView.on(FavoriteView.MOVEDOWN,function(e){
+                self.curView = wordView;
+                wordView.setSelection(0);
+                favoriteView.setSelection(-1);
+            });
+            wordView.on(SelectorView.MOVEUP,function(e){
+                self.curView = favoriteView;
+                favoriteView.setSelection(0);
+                wordView.setSelection(-1);
+            });
+            keyboardView.on(KeyboardView.MOVEUP,function(e){
+                self.curView = favoriteView;
+                favoriteView.setSelection(0);
+                keyboardView.setSelection(null);
+            });
+
             controller.addListener(EventType.GYRO_DELTA,function(e){
 
                 // change this
@@ -165,6 +195,10 @@ define([
                 if (e.y > delta && self.curView)  self.curView.moveUp();
                 else if (e.y < -delta && self.curView)  self.curView.moveDown();
             });
+
+            //controller.addListener(EventType.BLINK,function(e){ if (self.curView && self.curView.pick) self.curView.pick()});
+//controller.emit(EventType.SELECT,e)
+
 
             // what to do about clear, submitLine, etc?
 

@@ -181,6 +181,8 @@ define([
         ['','','p','b','z']
     ];
 
+    var actions = ['lt-done','lt-favorite','lt-clear','lt-back'];
+
     var KeyboardDict = Backbone.Model.extend({
         urlRoot:'/bigrams'
     });
@@ -287,16 +289,16 @@ define([
             this.render();
         },
         moveUp:function(){
-            this.move('up', Keyboard.MOVEUP,'b');
+            this.move('up', Keyboard.MOVEUP);
         },
         moveDown:function(){
-            this.move('down', Keyboard.MOVEDOWN,'v');
+            this.move('down', Keyboard.MOVEDOWN);
         },
         moveLeft:function(){
-            this.move('left', Keyboard.MOVELEFT,'.com');
+            this.move('left', Keyboard.MOVELEFT);
         },
         moveRight:function(){
-            this.move('right', Keyboard.MOVERIGHT,'y');
+            this.move('right', Keyboard.MOVERIGHT);
         },
         move:function(dir, evt, def){
             if (this.selection){
@@ -313,6 +315,10 @@ define([
 //                // we are coming in from below somewhere = go for the middle
 //                this.setSelection(def);
 //            }
+        },
+        pick:function(){
+            var curEl = $('.'+this.btnHighlight);
+            if (curEl) curEl.trigger('click');
         },
         initialize : function(){
             var elements = '';
@@ -415,7 +421,7 @@ define([
             if (this.letters) this.letters.removeClass(this.btnHighlight).removeClass(this.btnSuggest).addClass(this.btnOff);
             this.resetActions();
             if (letter) {
-                if (letter == 'lt-done' || letter == 'lt-favorite' || letter == 'lt-back' || letter == 'lt-clear'){
+                if (_.contains(actions,letter)){
                     $('.'+letter).removeClass('btn-success').removeClass('btn-danger').addClass(this.btnHighlight);
                 } else {
                     $('button[data-letter="'+letter+'"]').removeClass(this.btnSuggest).removeClass(this.btnOff).addClass(this.btnHighlight);
