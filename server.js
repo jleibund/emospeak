@@ -23,24 +23,11 @@ app.configure(function () {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-///////////// replace with real implementation ////////////
-var onDictionary = function(data,l){
-    var options = [];
-    _.each(data, function(w){
-        var idx = w.indexOf(l);
-        if (~idx && idx < w.length-1 && w[idx+1] != l){
-            options.push(w[idx+1]);
-        }
-    })
-    return options;
-};
-
-var dict = ['jonathon', 'leibundguth'];
 
 app.get('/bigrams/:id', function(req,res,next){
     res.send({
         status:0,
-        payload:onDictionary(dict,req.params.id)
+        payload:controller.getBigramFor(req.params.id)
     });
 })
 
