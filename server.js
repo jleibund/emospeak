@@ -44,31 +44,26 @@ app.get('/bigrams/:id', function(req,res,next){
     });
 })
 
-var favorites = ['peter', 'candy'];
-
 app.get('/favorite', function(req,res,next){
     res.send({
         status:0,
-        payload:favorites
+        payload:controller.getFavorites()
     });
 });
 
-app.post('/favorite', function(req,res,next){
-    var f = req.body.favorite;
-    if (f)
-        favorites.push(f);
+app.put('/favorite/:id', function(req,res,next){
+    controller.addFavorite(req.params.id);
     res.send({
         status:0,
-        payload:favorites
+        payload:controller.getFavorites()
     });
 });
 
 app.delete('/favorite/:id', function(req,res,next){
-    console.log('delete',req.body.id)
-    favorites.splice(favorites.indexOf(req.body.id),1);
+    controller.removeFavorite(req.params.id);
     res.send({
         status:0,
-        payload:favorites
+        payload:controller.getFavorites()
     });
 });
 

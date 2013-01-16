@@ -110,7 +110,7 @@ define([
         save:function(word){
             var self = this;
             var m = new FavoriteModel();
-            m.save({favorite:word}, {
+            m.save({id:word},{
                 success: function(data){
                     self.onLoad(data.toJSON().payload);
                 }
@@ -121,7 +121,6 @@ define([
             var m = new FavoriteModel({id:word});
             m.destroy({
                 success: function(model, data){
-                    console.log(arguments)
                     self.fetch();
                 }
             });
