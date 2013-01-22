@@ -367,12 +367,12 @@ define([
             navMap['lt-favorite'] = {up:'\'',down:null, left:'lt-clear', right:null};
             navMap['x'].down = 'lt-done';
             navMap['w'].down = 'lt-done';
-            navMap['p'].down = 'lt-done';
-            navMap['b'].down = 'lt-done';
-            navMap['z'].down = 'lt-done';
-            navMap['0'].down = 'lt-done';
-            navMap['\"'].down = 'lt-done';
-            navMap['\''].down = 'lt-done';
+            navMap['p'].down = 'lt-back';
+            navMap['b'].down = 'lt-back';
+            navMap['z'].down = 'lt-back';
+            navMap['0'].down = 'lt-clear';
+            navMap['\"'].down = 'lt-clear';
+            navMap['\''].down = 'lt-favorite';
 
 //            console.log('navmap', navMap);
 
