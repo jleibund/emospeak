@@ -88,7 +88,8 @@ define([
         },
         clear: function(){
             this.words = [];
-            this.nextWord()
+            this.setNavMap();
+            this.nextWord();
             this.render();
         },
         url: function(){

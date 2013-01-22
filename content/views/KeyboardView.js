@@ -361,10 +361,10 @@ define([
                 elements += this.makeElement(cList,row++);
 
             },this);
-            navMap['lt-done'] = {up:'p',down:null, left:null, right:'lt-favorite'};
-            navMap['lt-favorite'] = {up:'b',down:null, left:'lt-done', right:'lt-back'};
-            navMap['lt-back'] = {up:'z',down:null, left:'lt-favorite', right:'lt-clear'};
-            navMap['lt-clear'] = {up:'0',down:null, left:'lt-back', right:null};
+            navMap['lt-done'] = {up:'x',down:null, left:null, right:'lt-back'};
+            navMap['lt-back'] = {up:'p',down:null, left:'lt-done', right:'lt-clear'};
+            navMap['lt-clear'] = {up:'\"',down:null, left:'lt-back', right:'lt-favorite'};
+            navMap['lt-favorite'] = {up:'\'',down:null, left:'lt-clear', right:null};
             navMap['x'].down = 'lt-done';
             navMap['w'].down = 'lt-done';
             navMap['p'].down = 'lt-done';

@@ -1,47 +1,3 @@
-
-//requirejs.config({
-//    paths: {
-//        jquery: 'libs/jquery/jquery.min',
-//        underscore: 'libs/underscore/underscore.min',
-//        backbone: 'libs/backbone/backbone.min',
-//        three: 'libs/three/three.min',
-//        socket: 'libs/socket.io/socket.io',
-//        eventemitter: 'libs/eventemitter/EventEmitter',
-//        stats: 'libs/three/stats.min',
-//        detector: 'libs/three/Detector',
-//        templates: '../templates',
-//        'backbone.localStorage': 'lib/backbone.localStorage'
-//    },
-//    shim: {
-//        underscore: {
-//            exports: '_'
-//        },
-//        backbone: {
-//            deps: ['underscore', 'jquery'],
-//            exports: 'Backbone'
-//        },
-//        socket: {
-//            exports: 'io'
-//        },
-//        eventemitter: {
-//            exports: 'EventEmitter'
-//        },
-//        'backbone.localStorage': {
-//            deps: ['backbone'],
-//            exports: 'Backbone'
-//        },
-//        stats: {
-//            exports:'Stats'
-//        },
-//        detector:{
-//            exports:'Detector'
-//        },
-//        three:{
-//            exports:'THREE'
-//        }
-//    }
-//});
-
 define([
     'jquery',
     'underscore',
@@ -141,7 +97,7 @@ define([
 //            controller.addListener(EventType.LOOK_RIGHT,function(e){ footerView.add(' ')});
 //            controller.addListener(EventType.BLINK,function(e){ footerView.say()});
 
-            var delta = 11;
+            var delta = 4;
             this.curView = wordView;
             wordView.setSelection(0);
             var self = this;
@@ -151,9 +107,11 @@ define([
                 wordView.setSelection(-1);
             });
             keyboardView.on(KeyboardView.MOVELEFT, function(e){
-                self.curView = wordView;
-                wordView.setSelection(0);
-                keyboardView.setSelection(null);
+                if (wordView.words && wordView.words.length){
+                    self.curView = wordView;
+                    wordView.setSelection(0);
+                    keyboardView.setSelection(null);
+                }
             });
             wordView.on(SelectorView.MOVEDOWN,function(e){
                 self.curView = footerView;
@@ -166,8 +124,13 @@ define([
                 keyboardView.setSelection(null);
             });
             footerView.on(FooterView.MOVEUP, function(e){
-                self.curView = wordView;
-                wordView.setLast();
+                if (wordView.words && wordView.words.length){
+                    self.curView = wordView;
+                    wordView.setLast();
+                } else {
+                    self.curView = keyboardView;
+                    keyboardView.setSelection('p');
+                }
                 footerView.setSelection(null);
             });
 
@@ -177,14 +140,18 @@ define([
                 favoriteView.setSelection(-1);
             });
             wordView.on(SelectorView.MOVEUP,function(e){
-                self.curView = favoriteView;
-                favoriteView.setSelection(0);
-                wordView.setSelection(-1);
+                if (favoriteView.words && favoriteView.words.length){
+                    self.curView = favoriteView;
+                    favoriteView.setSelection(0);
+                    wordView.setSelection(-1);
+                }
             });
             keyboardView.on(KeyboardView.MOVEUP,function(e){
-                self.curView = favoriteView;
-                favoriteView.setSelection(0);
-                keyboardView.setSelection(null);
+                if (favoriteView.words && favoriteView.words.length){
+                    self.curView = favoriteView;
+                    favoriteView.setSelection(0);
+                    keyboardView.setSelection(null);
+                }
             });
 
             controller.addListener(EventType.GYRO_DELTA,function(e){
@@ -197,8 +164,10 @@ define([
                 else if (e.y < -delta && self.curView)  self.curView.moveDown();
             });
 
-            //controller.addListener(EventType.BLINK,function(e){ if (self.curView && self.curView.pick) self.curView.pick()});
-//controller.emit(EventType.SELECT,e)
+            var counter = 0;
+            controller.addListener(EventType.BLINK, _.throttle(_.after(2,function(e){
+                if (self.curView && self.curView.pick) self.curView.pick(); console.log('blink', counter++)
+            }),2000));
 
 
             // what to do about clear, submitLine, etc?

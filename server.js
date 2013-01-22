@@ -8,7 +8,8 @@ var express = require('express')
     , EventType = require('./shared/event-type');
 
 var powerThreshold = 0.45;
-var debounceTime = 900;
+var throttleTime = 2000;
+var afterCount = 4;
 var profile = '/Users/jpleibundguth/Library/Application Support/Emotiv/Profiles/jleibund.emu';
 
 var controller = new Controller({voice:'Ralph', rate:260, powerThreshold:powerThreshold, profile:profile});
@@ -53,6 +54,27 @@ app.delete('/favorite/:id', function(req,res,next){
         payload:controller.getFavorites()
     });
 });
+
+app.get('/options', function(req,res,next){
+    res.send({
+        status:0,
+        payload:{profile:controller.getProfile()}
+    });
+});
+app.post('/options', function(req,res,next){
+    console.log('save opts',req.body)
+    var obj = req.body;
+    controller.setProfile(obj.profile);
+    controller.disconnect(function(){
+        controller.connect();
+    });
+    res.send({
+        status:0,
+        payload:{profile:controller.getProfile()}
+    });
+});
+
+
 
 ///////////////////////////////////////////////////////
 
@@ -106,10 +128,13 @@ io.of('/events').on('connection',function(socket){
     _.each(EventType, function(event){
         var emit = function(data){
 //            console.log('Emit: ',event);
-            socket.emit(event,data)
+            if (~event.indexOf('/GYRO') || ~event.indexOf('/CONTROL'))
+                socket.emit(event,data)
+            else
+                socket.emit(event);
         };
-        if (!~event.indexOf('/CONTROL') && !~event.indexOf('/GYRO')){
-            emit = _.debounce(emit,debounceTime,false);
+        if (~event.indexOf('/CONTROL') && ~event.indexOf('/GYRO')){
+            emit = _.throttle(emit,throttleTime);
         }
 
         controller.addListener(event, emit);
