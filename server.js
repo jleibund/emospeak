@@ -10,9 +10,9 @@ var express = require('express')
 var powerThreshold = 0.45;
 var throttleTime = 2000;
 var afterCount = 4;
-var profile = '/Users/jpleibundguth/Library/Application Support/Emotiv/Profiles/jleibund.emu';
 
-var controller = new Controller({voice:'Ralph', rate:260, powerThreshold:powerThreshold, profile:profile});
+var controller = new Controller({voice:'Ralph', rate:260, powerThreshold:powerThreshold});
+
 
 app.configure(function () {
     app.use(express.bodyParser());
@@ -62,15 +62,19 @@ app.get('/options', function(req,res,next){
     });
 });
 app.post('/options', function(req,res,next){
-    console.log('save opts',req.body)
     var obj = req.body;
     controller.setProfile(obj.profile);
-    controller.disconnect(function(){
-        controller.connect();
-    });
-    res.send({
-        status:0,
-        payload:{profile:controller.getProfile()}
+    controller.store(function(err){
+        if (err) return next(err);
+        console.log('storeddd')
+        controller.reconnect();
+        setTimeout(function(){
+            res.send({
+                status:0,
+                payload:{profile:controller.getProfile()}
+            });
+
+        },500);
     });
 });
 
