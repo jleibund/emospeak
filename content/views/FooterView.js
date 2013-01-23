@@ -53,7 +53,7 @@ define([
                 var val = output.val();
                 self.words = val.split(' ');
                 self.render();
-                self.nextWord();
+                _.throttle(self.nextWord(),500);
 //                if (self.words && self.words.length);
 //                    self.controller.suggest(self.words[self.words.length-1]);
             });

@@ -373,6 +373,7 @@ define([
             navMap['0'].down = 'lt-clear';
             navMap['\"'].down = 'lt-clear';
             navMap['\''].down = 'lt-favorite';
+            navMap['.com'].down = 'lt-favorite';
 
 //            console.log('navmap', navMap);
 
@@ -385,7 +386,7 @@ define([
             this.clearButton = $('.lt-clear');
             this.favoiteButton = $('.lt-favorite');
             this.output = $('.lt-output').data('data','');
-            this.output.keyup(function(e){
+            this.output.keyup(_.throttle(function(e){
                 var word = self.output.val()
                 self.output.data('data',word);
                 if (word && word.length>0) {
@@ -394,7 +395,7 @@ define([
                     self.trigger(Keyboard.CLEAR);
                     self.render();
                 }
-            });
+            },500));
             this.table.html(this.elements);
             this.render();
 
