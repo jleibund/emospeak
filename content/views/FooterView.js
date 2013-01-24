@@ -24,17 +24,18 @@ define([
         },
         render:function(){
 
-            this.delegateEvents();
+//            this.delegateEvents();
             var html = '';
             var idx = 0;
             _.each(this.words, function(w){
                 if (w && w != '' && w != ' '){
-                    html += '<li class="kill-word" data-word="'+w+'" data-index="'+idx+'"><a href="#" class="btn-info"><strong>'+ w.toUpperCase()+' &times;</strong></a></li>';
+                    html += '<li class="kill-word" data-word="'+w+'" data-index="'+idx+'"><a href="#" class="btn"><strong>'+ w.toUpperCase()+' &times;</strong></a></li>';
                     idx++;
                 }
             });
             this.output.val(this.words.join(' '));
             this.$el.empty().append($(html));
+            this.setNavMap();
             this.delegateEvents();
 
             return this;
@@ -80,7 +81,7 @@ define([
             this.searchButton.click(function(){
                 self.search();
             });
-            this.setNavMap();
+//            this.setNavMap();
             this.render();
         },
         submit: function(){
@@ -88,7 +89,7 @@ define([
         },
         clear: function(){
             this.words = [];
-            this.setNavMap();
+       //     this.setNavMap();
             this.nextWord();
             this.render();
         },
@@ -112,7 +113,7 @@ define([
                 console.log('words',this.words);
                 this.nextWord();
             }
-            this.setNavMap();
+//            this.setNavMap();
             this.render();
         },
         nextWord: function(){
@@ -125,19 +126,17 @@ define([
         remove: function(){
             // need to replace with something better and/or use unigram parsing here.
             this.words.pop();
-            this.setNavMap();
+            //this.setNavMap();
             this.nextWord();
         },
         setSelection: function(idx){
             this.selection = idx;
-            if (this.wordElements) this.wordElements.removeClass('btn-primary').addClass('btn-info');
+            if (this.wordElements) this.wordElements.removeClass('btn-primary').addClass('btn');
             this.resetActions();
-            if (idx != null) {
-                if (_.contains(actions,idx)){
-                    $('.'+idx).removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary');
-                } else {
-                    $('button[data-index="'+idx+'"]').removeClass('btn-info').addClass('btn-primary');
-                }
+            if (_.contains(actions,idx)){
+                $('.'+idx).removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary');
+            } else if (_.isNumber(idx)){
+                $('li[data-index="'+idx+'"]').find('a').removeClass('btn').addClass('btn-primary');
             }
         },
         setNavMap :function(){
@@ -145,9 +144,10 @@ define([
             var up = null;
             if (this.words && this.words.length){
                 for (var i=0;i<this.words.length;i++){
-                    navMap[i] = {up:null,down:'say',left:(i==0)?null:i-1, right: (i==this.words.length-1)?null:i+1}
+                    navMap[i] = {up:null,down:'search',left:(i==0)?null:i-1, right: (i==this.words.length-1)?null:i+1};
+                    console.log(i, navMap[i]);
                 }
-                up = 0;
+                up = this.words.length-1;
             }
             // add in the buttons
             navMap['say'] = {up:up, down:null, left:null, right:'submit'};
@@ -155,7 +155,7 @@ define([
             navMap['go'] = {up:up, down:null, left:'submit', right:'search'};
             navMap['search'] = {up:up, down:null, left:'go', right:'clear'};
             navMap['clear'] = {up:up, down:null, left:'search', right:null};
-            this.wordElements = $('.kill-word');
+            this.wordElements = $('.kill-word').find('a');
         },
         moveUp:function(){
             this.move('up', FooterView.MOVEUP);
@@ -170,10 +170,10 @@ define([
             this.move('right', FooterView.MOVERIGHT);
         },
         move: function(dir,evt){
-            if (this.selection){
+            if (this.selection != null){
                 var nav = this.navMap[this.selection];
                 var next = nav && nav[dir];
-                if (!next){
+                if (next == null){
                     this.setSelection(this.selection);
                     this.trigger(evt,this.selection);
                 } else {

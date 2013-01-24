@@ -79,19 +79,23 @@ define([
                 this.setSelection(this.words.length);
         },
         moveUp: function(){
-            this.setSelection(this.selected-1);
             if (!this.selected){
                 this.trigger(SelectorView.MOVEUP);
-                this.selected = 1;
+                this.setSelection(-1);
+//                this.selected = 1;
             } else if (this.selected == -1  && this.words && this.words.length){
-                this.selected = this.words.length;
+                this.setSelection(this.words.length-1);
+//                this.selected = this.words.length;
+            } else {
+                this.setSelection(this.selected-1);
             }
         },
         moveDown: function(){
-            this.setSelection(this.selected+1);
             if (this.words && this.words.length && this.selected == this.words.length-1){
                 this.trigger(SelectorView.MOVEDOWN);
-                this.selected = this.words.length-2;
+                this.setSelection(-1);
+            } else {
+                this.setSelection(this.selected+1);
             }
         },
         moveLeft: function(){
