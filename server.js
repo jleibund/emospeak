@@ -7,12 +7,8 @@ var express = require('express')
     , Controller = require('./lib/controller').Controller
     , EventType = require('./shared/event-type');
 
-var powerThreshold = 0.45;
-var throttleTime = 2000;
-var afterCount = 4;
-
-var controller = new Controller({voice:'Ralph', rate:260, powerThreshold:powerThreshold});
-
+var controller = new Controller();
+var throttleTime = controller.getOptions().throttle;
 
 app.configure(function () {
     app.use(express.bodyParser());
@@ -56,22 +52,22 @@ app.delete('/favorite/:id', function(req,res,next){
 });
 
 app.get('/options', function(req,res,next){
+    console.log('sending',controller.getOptions())
     res.send({
         status:0,
-        payload:{profile:controller.getProfile()}
+        payload:controller.getOptions()
     });
 });
 app.post('/options', function(req,res,next){
-    var obj = req.body;
-    controller.setProfile(obj.profile);
+    console.log('saving',req.body);
+    controller.setOptions(req.body);
     controller.store(function(err){
         if (err) return next(err);
-        console.log('storeddd')
         controller.reconnect();
         setTimeout(function(){
             res.send({
                 status:0,
-                payload:{profile:controller.getProfile()}
+                payload:req.body
             });
 
         },500);

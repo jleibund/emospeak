@@ -28,6 +28,7 @@
         "dependencies": {
             "jquery": "1.8.3",
             "underscore": "1.4.3",
+            "text": "2.0.2",
             "backbone" : "0.9.9",
             "bootstrap-core" : "2.2.2",
             "socket.io" : "0.9.6-jam.1",

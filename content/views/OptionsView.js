@@ -1,68 +1,69 @@
 define([
     'jquery',
     'underscore',
-    'backbone'
-], function($, _, Backbone){
+    'backbone',
+    'text!templates/optionsTemplate.html'
+], function($, _, Backbone, template){
 
     var OptionsModel = Backbone.Model.extend({
-        urlRoot:'/options'
+        urlRoot:'/options',
+        parse:function (resp) {
+//            this.limit = resp.limit;
+//            this.skip = resp.skip;
+//            this.count = resp.count;
+            if (resp.status == 0) {
+                return resp.payload;
+            } else {
+                $('.failed').show();
+                console.log('error', resp, this);
+            }
+        }
     });
+
+    var fields = ['profile','voice','throttle','rate','deltaX', 'deltaY'];
+    var numeric = ['throttle','rate','deltaX', 'deltaY'];
 
     var OptionsView = Backbone.View.extend({
         tagName:'div',
         events: {
             'click .save' : 'onSaveClick'
         },
+      //  template: _.template(template),
         onSaveClick: function(e) {
             e.preventDefault();
-            console.log('saveClick',this.profileFile.val());
 
-//            var button = $(e.currentTarget);
-            this.options.profile = this.profileFile.val();
-            this.save();
+            _.each(fields, function(f){
+                var val = $('.'+f).val();
+                if (_.contains(numeric,f)) val -= 0;
+                this.model.set(f,val);
+            },this);
+
+            this.model.save();
+            this.saveAlert.show();
+//            alert('Options saved!');
             this.trigger(OptionsView.SAVE,this.options);
         },
-        render:function(){
-            this.delegateEvents();
-            this.profileFile.val(this.options.profile);
+        render: function() {
+            if (!this.saveAlert){
+                this.saveAlert = $('.saved');
+                this.failAlert = $('.failed');
+//                this.saveAlert.hide();
+//                this.failAlert.hide();
+//                $('.alert').alert('close');
+                this.listenTo(this.model, 'error', function(){this.failAlert.show()});
+            }
+
+            this.$el.html(this.template(this.model.attributes));
+            $('select>option[value="'+this.model.get('voice')+'"]').attr('selected', true);
             return this;
         },
         initialize: function(){
-            this.options = {};
-            this.profileFile = $('.profile');
-//            this.saveBtn = $('.save');
-            console.log('initialize');
-            this.fetch();
-        },
-        fetch: function(){
-            var self = this;
-            var m = new OptionsModel();
-            console.log('fetch');
-
-            m.fetch({
-                success:function(data){
-                    self.onLoad(data.toJSON().payload)
-                }
-            });
-        },
-        save:function(){
-            console.log('save');
-            var self = this;
-            var m = new OptionsModel();
-            var prof = this.options.profile;
-            if (prof && prof.length && prof != ''){
-                m.save({profile:this.options.profile},{
-                    success: function(data){
-                        self.onLoad(data.toJSON().payload);
-                    }
-                });
-            }
-        },
-        onLoad: function(data){
-            console.log('load',data);
-
-            this.options = data;
-            this.render();
+            this.template = _.template(template)
+            this.model = new OptionsModel();
+            this.listenTo(this.model, 'change', this.render);
+//            this.listenTo(this.model, 'save', function(){alert('Options saved!')});
+//            this.sync('read',this.model);
+            this.model.fetch();
         }
     });
     OptionsView.SAVE = 'options-save';

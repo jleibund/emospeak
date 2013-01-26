@@ -100,6 +100,15 @@ define([
             var masterX = 0, masterY = 0;
             var deltaUpDown = 15;
             var deltaLeftRight = 9;
+
+            // load options from the server
+            $.getJSON("/options",function(opts){
+                if (opts.status == 0){
+                    if (opts.payload.deltaY) deltaUpDown = opts.payload.deltaY-0;
+                    if (opts.payload.deltaX) deltaLeftRight = opts.payload.deltaX-0;
+                }
+            });
+
             this.curView = wordView;
             wordView.setSelection(0);
             var self = this;
