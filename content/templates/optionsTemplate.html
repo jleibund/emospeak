@@ -1,20 +1,21 @@
 
 <form class="form form-horizontal">
+    <div class="alert alert-error fade in failed">
+        <button type="button" class="close" data-dismiss="failed">&times;</button>
+        <strong>Oops!</strong> A problem occurred saving these options.
+    </div>
+    <div class="alert alert-success fade in saved">
+        <button type="button" class="close" data-dismiss="saved">&times;</button>
+        <strong>Success!</strong> Options have been successfully saved!
+    </div>
     <fieldset class="well">
-        <div class="alert alert-error fade in failed" style="display:none">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Oops!</strong> A problem occurred saving these options.
-        </div>
-        <div class="alert alert-success fade in saved" style="display:none">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Success!</strong> Options have been successfully saved!
-        </div>
         <div class="control-group">
             <label class="control-label" for="profile">Profile File</label>
             <div class="controls">
                 <input type="text" id="profile" value="<%=profile%>" class="span8 profile"
                        required="required"
                        data-error="Please select .emo file.">
+                <span class="help-block">This is your .emu file, usually stored by Emotiv in /Users/*username*/Library/Application Support/Emotiv/Profiles/</span>
             </div>
         </div>
         <div class="control-group">
@@ -30,6 +31,7 @@
                     <option value="Vicki">Vicki</option>
                     <option value="Victoria">Victoria</option>
                 </select>
+                <span class="help-block">The voice you would like to use.</span>
             </div>
         </div>
         <div class="control-group">
@@ -37,6 +39,7 @@
             <div class="controls">
                 <input type="number" value="<%=rate%>" min="100" max="400" id="rate" class="input-medium rate"
                        data-error="Please give a voice rate.">
+                <span class="help-block">The rate of speed for the voice, 240 is normal.</span>
             </div>
         </div>
         <div class="control-group">
@@ -44,6 +47,7 @@
             <div class="controls">
                 <input type="number" value="<%=throttle%>" min="300" max="5000" id="throttle" class="input-medium throttle"
                        data-error="Please give a throttle time between events in milliseconds.">
+                <span class="help-block">The delay between event detections in milliseconds, 2000 is good.</span>
             </div>
         </div>
         <div class="control-group">
@@ -51,6 +55,7 @@
             <div class="controls">
                 <input type="number" value="<%=deltaX%>" min="1" max="50" id="deltaX" class="input-medium deltaX"
                        data-error="Please give a delta for X movement to trigger left/right moves.">
+                <span class="help-block">The 'play' in gyro X detection, larger value means more left/right head movement to move selection box.</span>
             </div>
         </div>
         <div class="control-group">
@@ -58,6 +63,15 @@
             <div class="controls">
                 <input type="number" value="<%=deltaY%>" min="1" max="50" id="deltaY" class="input-medium deltaY"
                        data-error="Please give a delta for Y movement to trigger up/down moves.">
+                <span class="help-block">The 'play' in gyro Y detection, larger value means more up/down head movement to move selection box.</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="action">Select Action</label>
+            <div class="controls">
+                <select id="action" class="input-medium action" required="required" value="<%=action%>" data-error="Please select an action.">
+                </select>
+                <span class="help-block">The detected action you want for selection.  Adjust sensitivity in Emotiv Control Panel</span>
             </div>
         </div>
         <div class="control-group">

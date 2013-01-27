@@ -52,14 +52,12 @@ app.delete('/favorite/:id', function(req,res,next){
 });
 
 app.get('/options', function(req,res,next){
-    console.log('sending',controller.getOptions())
     res.send({
         status:0,
         payload:controller.getOptions()
     });
 });
 app.post('/options', function(req,res,next){
-    console.log('saving',req.body);
     controller.setOptions(req.body);
     controller.store(function(err){
         if (err) return next(err);
@@ -69,7 +67,6 @@ app.post('/options', function(req,res,next){
                 status:0,
                 payload:req.body
             });
-
         },500);
     });
 });
