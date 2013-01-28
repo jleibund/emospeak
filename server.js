@@ -113,6 +113,13 @@ app.get('/suggest', function(req, res, next){
     })
 });
 
+app.get('/rezero', function(req, res, next){
+    controller.rezero();
+    res.send({
+        status:0,
+        payload:{}
+    });
+});
 
 
 //process.on('SIGINT', function () {

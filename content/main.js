@@ -98,20 +98,47 @@ define([
 //            controller.addListener(EventType.BLINK,function(e){ footerView.say()});
 
             var masterX = 0, masterY = 0;
+            var curX = 0, curY = 0;
             var deltaUpDown = 15;
             var deltaLeftRight = 9;
+            var action = EventType.BLINK;
 
             // load options from the server
-            $.getJSON("/options",function(opts){
+            controller.options(function(opts){
                 if (opts.status == 0){
                     if (opts.payload.deltaY) deltaUpDown = opts.payload.deltaY-0;
                     if (opts.payload.deltaX) deltaLeftRight = opts.payload.deltaX-0;
+                    if (opts.payload.action) action = opts.payload.action;
                 }
             });
 
             this.curView = wordView;
             wordView.setSelection(0);
             var self = this;
+
+            var isNoop = false;
+            var borderX = 0, borderY = 0;
+            var border = null;
+            var noop = function(b){
+                isNoop = true;
+                border = b;
+                borderX = curX;
+                borderY = curY;
+            };
+            var wasNoop = function(){
+                var backIn = false;
+                //console.log('x',curX,'y',curY);
+                backIn = (!backIn && border == 'up' && curY < borderY);
+                backIn = (!backIn && border == 'down' && curY > borderY);
+                backIn = (!backIn && border == 'right' && curX < borderX);
+                backIn = (!backIn && border == 'left' && curX > borderX);
+                if (isNoop && backIn){
+                    isNoop = false;
+                    controller.rezero();
+                    masterX = masterY = 0;
+                }
+            }
+
             wordView.on(SelectorView.MOVERIGHT,function(e){
                 self.curView = keyboardView;
                 keyboardView.setSelection('y');
@@ -120,8 +147,15 @@ define([
             keyboardView.on(KeyboardView.MOVELEFT, function(e){
                 if (wordView.words && wordView.words.length){
                     self.curView = wordView;
-                    wordView.setSelection(0);
+                    var sel = 0;
+                    var len = wordView.words.length;
+                    if (e == 'q' && len > 2) sel = 2;
+                    if (e == 'y' && len > 3) sel = 3;
+                    if (e == 'x' && len > 4) sel = 4;
+                    wordView.setSelection(sel);
                     keyboardView.setSelection(null);
+                } else {
+                    noop('left');
                 }
             });
             wordView.on(SelectorView.MOVEDOWN,function(e){
@@ -137,13 +171,8 @@ define([
                 keyboardView.setSelection(null);
             });
             footerView.on(FooterView.MOVEUP, function(e){
-//                if (wordView.words && wordView.words.length){
-//                    self.curView = wordView;
-//                    wordView.setLast();
                 self.curView = keyboardView;
                 var next = 'lt-done';
-//                if (e == 'go' || e == 'search') next = 'lt-back';
-//                if (e == 'clear') next = 'lt-clear';
                 keyboardView.setSelection(next);
                 footerView.setSelection(null);
             });
@@ -159,36 +188,41 @@ define([
                     favoriteView.setSelection(0);
                     wordView.setSelection(-1);
                 } else {
-                    masterX = masterY = 0;
+                    noop('up');
                 }
             });
-            keyboardView.on(KeyboardView.MOVEUP,function(e){
-                if (favoriteView.words && favoriteView.words.length){
-                    self.curView = favoriteView;
-                    favoriteView.setSelection(0);
-                    keyboardView.setSelection(null);
-                } else {
-                    masterX = masterY = 0;
-                }
-            });
+//            keyboardView.on(KeyboardView.MOVEUP,function(e){
+//                if (favoriteView.words && favoriteView.words.length){
+//                    self.curView = favoriteView;
+//                    favoriteView.setSelection(0);
+//                    keyboardView.setSelection(null);
+//                } else {
+//                    noop('up');
+//                }
+//            });
+            keyboardView.on(FavoriteView.MOVEUP,function(){noop('up')});
 
-
-            var noop = function(e){
+//            favoriteView.on(FavoriteView.MOVEUP,function(){noop('up')});
+            favoriteView.on(FavoriteView.MOVEUP,function(){
                 masterX = masterY = 0;
-            };
-            favoriteView.on(FavoriteView.MOVEUP,noop);
-            favoriteView.on(FooterView.MOVELEFT, noop);
-            favoriteView.on(FooterView.MOVERIGHT, noop);
-            wordView.on(SelectorView.MOVELEFT,noop);
-            keyboardView.on(KeyboardView.MOVERIGHT,noop);
-            footerView.on(FooterView.MOVEDOWN, noop);
-            footerView.on(FooterView.MOVELEFT, noop);
-            footerView.on(FooterView.MOVERIGHT, noop);
+                controller.rezero();
+            });
+            favoriteView.on(FooterView.MOVELEFT, function(){noop('left')});
+            favoriteView.on(FooterView.MOVERIGHT, function(){noop('right')});
+            wordView.on(SelectorView.MOVELEFT,function(){noop('left')});
+            keyboardView.on(KeyboardView.MOVERIGHT,function(){noop('right')});
+            footerView.on(FooterView.MOVEDOWN, function(){noop('down')});
+            footerView.on(FooterView.MOVELEFT, function(){noop('left')});
+            footerView.on(FooterView.MOVERIGHT, function(){noop('right')});
 
             controller.addListener(EventType.GYRO_DELTA,function(e){
 
+                curX +=e.x;
+                curY +=e.y;
                 masterX += e.x;
                 masterY += e.y;
+
+                wasNoop();
 
                 // change this
                 if (masterX > deltaLeftRight && self.curView)  {
@@ -211,9 +245,12 @@ define([
             });
 
             var counter = 0;
-            controller.addListener(EventType.BLINK, function(e){
+            controller.addListener(action, function(e){
                 if (self.curView && self.curView.pick) self.curView.pick(); console.log('blink', counter++)
             });
+
+            controller.rezero();
+
 
 //            controller.addListener(EventType.BLINK, _.throttle(_.after(2,function(e){
 //                if (self.curView && self.curView.pick) self.curView.pick(); console.log('blink', counter++)

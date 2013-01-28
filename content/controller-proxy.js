@@ -51,6 +51,12 @@ define([
         submitLine: function(msg, cb){ this.call(msg,cb, 'submitLine') },
         suggest: function(msg, cb){ this.call(msg,cb, 'suggest') },
         nextWord: function(msg, cb){ this.call(msg,cb, 'nextWord') },
+        options: function(cb) {
+            $.getJSON('/options',cb);
+        },
+        rezero: function(cb) {
+            $.getJSON('/rezero',cb);
+        },
         call: function(msg, cb, verb){
             $.getJSON('/'+verb+'?term=' + msg, function (obj, err) {
                 if (cb) cb(obj.payload);
