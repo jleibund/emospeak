@@ -42,26 +42,28 @@ define([
                 this.model.set(f,val);
             },this);
 
-            this.model.save();
-            this.saveAlert.show();
-            this.trigger(OptionsView.SAVE,this.options);
+            this.model.save({}, {
+                success: _.bind(function(model, res){
+                    this.saveAlert.show();
+                    this.trigger(OptionsView.SAVE,this.options);
+                },this),
+                failure:_.bind(function(model,res){
+                    this.failAlert.show();
+                },this)
+            });
         },
         render: function() {
 
             this.$el.html(this.template(this.model.attributes));
             $('select.voice>option[value="'+this.model.get('voice')+'"]').attr('selected', true);
 
-            if (!this.saveAlert){
-                this.saveAlert = $('.saved');
-                this.failAlert = $('.failed');
-                this.action = $('.action');
-                this.actionOptions = _.filter(EventType, function(t){
-                    return (~t.indexOf('/EXP'))
-                }).sort();
-                this.saveAlert.hide();
-                this.failAlert.hide();
-                this.listenTo(this.model, 'error', function(){this.failAlert.show()});
-            }
+//            if (!this.saveAlert){
+//            }
+            this.saveAlert = $('.saved');
+            this.failAlert = $('.failed');
+            this.action = $('.action');
+            this.saveAlert.hide();
+            this.failAlert.hide();
 
             var html = '';
             _.each(this.actionOptions, function(o){
@@ -77,8 +79,13 @@ define([
             this.template = _.template(template)
             this.model = new OptionsModel();
             this.listenTo(this.model, 'change', this.render);
-//            this.listenTo(this.model, 'save', function(){alert('Options saved!')});
-//            this.sync('read',this.model);
+
+            this.listenTo(this.model, 'error', function(){
+                if (this.failAlert) this.failAlert.show();
+            });
+            this.actionOptions = _.filter(EventType, function(t){
+                return (~t.indexOf('/EXP'))
+            }).sort();
             this.model.fetch();
         }
     });

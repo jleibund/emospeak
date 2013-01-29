@@ -58,16 +58,13 @@ app.get('/options', function(req,res,next){
     });
 });
 app.post('/options', function(req,res,next){
-    controller.setOptions(req.body);
-    controller.store(function(err){
+
+    controller.setOptions(req.body,function(err){
         if (err) return next(err);
-        controller.reconnect();
-        setTimeout(function(){
-            res.send({
-                status:0,
-                payload:req.body
-            });
-        },500);
+        res.send({
+            status:0,
+            payload:req.body
+        });
     });
 });
 
