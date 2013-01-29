@@ -3,8 +3,8 @@ emospeak
 
 Emotiv application for enhanced accessibility
 
-npm install
-jam install (to update ui deps)
+> npm install
+> jam install (to update ui deps)
 
 Includes foreman procfile for installation as a service - see node-foreman on github.  Use foreman to run or direct:
 
