@@ -87,6 +87,7 @@ define([
                 return (~t.indexOf('/EXP'))
             }).sort();
             this.model.fetch();
+            this.render();
         }
     });
     OptionsView.SAVE = 'options-save';
