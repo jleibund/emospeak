@@ -102,6 +102,7 @@ define([
             var deltaUpDown = 15;
             var deltaLeftRight = 9;
             var action = EventType.BLINK;
+            var throttleTime = 2000;
 
             // load options from the server
             controller.options(function(opts){
@@ -109,7 +110,11 @@ define([
                     if (opts.payload.deltaY) deltaUpDown = opts.payload.deltaY-0;
                     if (opts.payload.deltaX) deltaLeftRight = opts.payload.deltaX-0;
                     if (opts.payload.action) action = opts.payload.action;
+                    if (opts.payload.throttle) throttleTime = opts.payload.throttle;
                 }
+                controller.addListener(action, _.throttle(function(e){
+                    if (self.curView && self.curView.pick) self.curView.pick(); console.log('blink', counter++)
+                },throttleTime));
             });
 
             this.curView = wordView;
@@ -245,9 +250,6 @@ define([
             });
 
             var counter = 0;
-            controller.addListener(action, function(e){
-                if (self.curView && self.curView.pick) self.curView.pick(); console.log('blink', counter++)
-            });
 
             controller.rezero();
 
